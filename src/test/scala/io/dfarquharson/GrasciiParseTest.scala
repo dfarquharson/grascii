@@ -79,4 +79,8 @@ class GrasciiParseTest extends FunSuite {
       )))
   }
 
+  test("Bad input to parse") {
+//    assert(GrasciiParse.parse(List("A=>B=>C")))
+  }
+
 }

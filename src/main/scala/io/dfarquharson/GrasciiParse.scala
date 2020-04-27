@@ -12,7 +12,8 @@ trait GrasciiParse {
 object GrasciiParse {
 
   import GraphMonoid._ // why is this necessary?
-  def parse(lines: List[String]): Graph = {
+  def parse(lines: List[String]): Graph = { // TODO: return a Tuple[List[Error], Graph], and make caller responsible for dealing with the presence of errors
+    // TODO: filter lines that don't match the pattern and report errors on them
     lines.map(parseLine).combineAll
   }
 
