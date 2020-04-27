@@ -53,20 +53,23 @@ class GrasciiParseTest extends FunSuite {
   }
 
   test("One thing pointing to another") {
-    assert(GrasciiParse.parse(List("A=B=>C")) == Graph(
+    val parsed = GrasciiParse.parse(List("A=B=>C"))
+    assert(parsed.isSuccess)
+    assert(parsed.get == Graph(
       List(Node("A"), Node("C")),
       List(Edge(Node("A"), Node("C"), "B"))
     ))
   }
 
   test("A few things pointing at each other") {
-    assert(GrasciiParse.parse(
+    val parsed = GrasciiParse.parse(
       List(
         "A=HTTP=>B",
         "B=GRPC=>C",
         "C=D=>A"
-      )
-    ) == Graph(
+      ))
+    assert(parsed.isSuccess)
+    assert(parsed.get == Graph(
       List(
         Node("A"),
         Node("B"),
@@ -79,8 +82,23 @@ class GrasciiParseTest extends FunSuite {
       )))
   }
 
-  test("Bad input to parse") {
-//    assert(GrasciiParse.parse(List("A=>B=>C")))
+  // TODO: ScalaCheck for input validation?
+
+  test("Only bad input to parse") {
+    val parsed = GrasciiParse.parse(
+      List(
+        "A==B==>C"
+      ))
+    assert(parsed.isFailure)
+  }
+
+  test("Some bad input and some good input to parse") {
+    val parsed = GrasciiParse.parse(
+      List(
+        "A=B=>C",
+        "A=D=C"
+      ))
+    assert(parsed.isFailure)
   }
 
 }

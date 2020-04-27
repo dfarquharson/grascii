@@ -2,22 +2,33 @@ package io.dfarquharson
 
 import cats.Monoid
 import cats.implicits._
+import io.dfarquharson.GraphMonoid._
+
+import scala.util.{Failure, Success, Try}
+
+class NonConformantLineException(message: String) extends Exception(message) {}
 
 trait GrasciiParse {
-  def parse(lines: List[String]): Graph
-
-  def parseLine(line: String): Graph
+  def parse(lines: List[String]): Try[Graph]
 }
 
-object GrasciiParse {
+object GrasciiParse extends GrasciiParse {
 
-  import GraphMonoid._ // why is this necessary?
-  def parse(lines: List[String]): Graph = { // TODO: return a Tuple[List[Error], Graph], and make caller responsible for dealing with the presence of errors
-    // TODO: filter lines that don't match the pattern and report errors on them
-    lines.map(parseLine).combineAll
+  def parse(lines: List[String]): Try[Graph] = { // TODO: return a Tuple[List[Error], Graph], and make caller responsible for dealing with the presence of errors?
+    if (lines.forall(validLine)) {
+      Success(lines.map(parseLine).combineAll)
+    } else {
+      Failure(new NonConformantLineException("Non conformant lines present. Must conform to A=B=>C pattern"))
+    }
   }
 
-  def parseLine(s: String): Graph = {
+  private def validLine(s: String): Boolean =
+    s.contains("=") &&
+      s.contains("=>") &&
+      s.split("=").length == 3 &&
+      s.split("=>").length == 2
+
+  private def parseLine(s: String): Graph = {
     val pattern = "(.*)=(.*)=>(.*)".r
     val pattern(nodeA, edge, nodeB) = s
     Graph(List(Node(nodeA), Node(nodeB)),

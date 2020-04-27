@@ -35,4 +35,10 @@ class FunctionalBasics extends FunSuite {
     assert(true != false)
   }
 
+  test("Partition") {
+    val (evens, odds) = List(1, 2, 3, 4).partition(_ % 2 == 0)
+    assert(evens == List(2, 4))
+    assert(odds == List(1, 3))
+  }
+
 }
