@@ -3,13 +3,13 @@ package io.dfarquharson
 import cats.Monoid
 import cats.implicits._
 
-trait Grascii {
+trait GrasciiParse {
   def parse(lines: List[String]): Graph
 
   def parseLine(line: String): Graph
 }
 
-object Grascii {
+object GrasciiParse {
 
   import GraphMonoid._ // why is this necessary?
   def parse(lines: List[String]): Graph = {

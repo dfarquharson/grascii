@@ -4,7 +4,7 @@ import cats.implicits._
 import io.dfarquharson.GraphMonoid._
 import org.scalatest.FunSuite
 
-class GrasciiTest extends FunSuite {
+class GrasciiParseTest extends FunSuite {
 
   test("Combine Graphs") {
     assert(List(
@@ -53,14 +53,14 @@ class GrasciiTest extends FunSuite {
   }
 
   test("One thing pointing to another") {
-    assert(Grascii.parse(List("A=B=>C")) == Graph(
+    assert(GrasciiParse.parse(List("A=B=>C")) == Graph(
       List(Node("A"), Node("C")),
       List(Edge(Node("A"), Node("C"), "B"))
     ))
   }
 
   test("A few things pointing at each other") {
-    assert(Grascii.parse(
+    assert(GrasciiParse.parse(
       List(
         "A=HTTP=>B",
         "B=GRPC=>C",
