@@ -4,29 +4,32 @@ import cats.Monoid
 import cats.implicits._
 import io.dfarquharson.GraphMonoid._
 
-import scala.util.{Failure, Success, Try}
-
 class NonConformantLineException(message: String) extends Exception(message) {}
 
-trait GrasciiParse {
-  def parse(lines: List[String]): Try[Graph]
+trait GrasciiValid {
+  def valid(lines: List[String]): Boolean
 }
 
-object GrasciiParse extends GrasciiParse {
-
-  def parse(lines: List[String]): Try[Graph] = { // TODO: return a Tuple[List[Error], Graph], and make caller responsible for dealing with the presence of errors?
-    if (lines.forall(validLine)) {
-      Success(lines.map(parseLine).combineAll)
-    } else {
-      Failure(new NonConformantLineException("Non conformant lines present. Must conform to A=B=>C pattern"))
-    }
-  }
+object GrasciiValid extends GrasciiValid {
+  override def valid(lines: List[String]): Boolean =
+    lines.forall(validLine)
 
   private def validLine(s: String): Boolean =
     s.contains("=") &&
       s.contains("=>") &&
       s.split("=").length == 3 &&
       s.split("=>").length == 2
+}
+
+trait GrasciiParse {
+  def parse(lines: List[String]): Graph
+}
+
+object GrasciiParse extends GrasciiParse {
+
+  override def parse(lines: List[String]): Graph = {
+    lines.map(parseLine).combineAll
+  }
 
   private def parseLine(s: String): Graph = {
     val pattern = "(.*)=(.*)=>(.*)".r

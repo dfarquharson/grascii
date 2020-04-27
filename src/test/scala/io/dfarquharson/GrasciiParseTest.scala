@@ -53,52 +53,48 @@ class GrasciiParseTest extends FunSuite {
   }
 
   test("One thing pointing to another") {
-    val parsed = GrasciiParse.parse(List("A=B=>C"))
-    assert(parsed.isSuccess)
-    assert(parsed.get == Graph(
-      List(Node("A"), Node("C")),
-      List(Edge(Node("A"), Node("C"), "B"))
-    ))
+    assert(GrasciiParse.parse(List("A=B=>C")) ==
+      Graph(
+        List(Node("A"), Node("C")),
+        List(Edge(Node("A"), Node("C"), "B"))
+      ))
   }
 
   test("A few things pointing at each other") {
-    val parsed = GrasciiParse.parse(
+    assert(GrasciiParse.parse(
       List(
         "A=HTTP=>B",
         "B=GRPC=>C",
         "C=D=>A"
-      ))
-    assert(parsed.isSuccess)
-    assert(parsed.get == Graph(
-      List(
-        Node("A"),
-        Node("B"),
-        Node("C")
-      ),
-      List(
-        Edge(Node("A"), Node("B"), "HTTP"),
-        Edge(Node("B"), Node("C"), "GRPC"),
-        Edge(Node("C"), Node("A"), "D")
-      )))
+      )) ==
+      Graph(
+        List(
+          Node("A"),
+          Node("B"),
+          Node("C")
+        ),
+        List(
+          Edge(Node("A"), Node("B"), "HTTP"),
+          Edge(Node("B"), Node("C"), "GRPC"),
+          Edge(Node("C"), Node("A"), "D")
+        )))
   }
 
   // TODO: ScalaCheck for input validation?
 
   test("Only bad input to parse") {
-    val parsed = GrasciiParse.parse(
+    assert(!GrasciiValid.valid(
       List(
         "A==B==>C"
-      ))
-    assert(parsed.isFailure)
+      )))
   }
 
   test("Some bad input and some good input to parse") {
-    val parsed = GrasciiParse.parse(
+    assert(!GrasciiValid.valid(
       List(
         "A=B=>C",
         "A=D=C"
-      ))
-    assert(parsed.isFailure)
+      )))
   }
 
 }
