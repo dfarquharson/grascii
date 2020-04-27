@@ -8,3 +8,5 @@
 - [ ] generate ascii art graphs from in-memory Graph
 - [ ] ScalaCheck usage (especially on the draw function, as it asserts strong properties on an infinite domain and range)
 - [ ] code coverage
+- [ ] write alternative implementation in clojure
+- [ ] write alternative implementation in python (toolz, hypothesis, pytest, pytest-cov)
