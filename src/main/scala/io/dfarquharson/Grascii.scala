@@ -17,9 +17,10 @@ object Grascii {
   }
 
   def parseLine(s: String): Graph = {
-    // TODO: use parser combinators to do this
-    //  - look at this: https://tpolecat.github.io/atto/
-    Graph(List(), List())
+    val pattern = "(.*)=(.*)=>(.*)".r
+    val pattern(nodeA, edge, nodeB) = s
+    Graph(List(Node(nodeA), Node(nodeB)),
+      List(Edge(Node(nodeA), Node(nodeB), edge)))
   }
 }
 
