@@ -82,6 +82,21 @@ class GrasciiParseTest extends FunSuite {
 
   // TODO: ScalaCheck for input validation?
 
+  test("Single line of good input") {
+    assert(GrasciiValid.valid(
+      List(
+        "A=B=>C"
+      )))
+  }
+
+  test("Multiple lines of good input") {
+    assert(GrasciiValid.valid(
+      List(
+        "A=B=>C",
+        "A=D=>E"
+      )))
+  }
+
   test("Only bad input to parse") {
     assert(!GrasciiValid.valid(
       List(
