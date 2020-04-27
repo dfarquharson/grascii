@@ -4,8 +4,6 @@ import cats.Monoid
 import cats.implicits._
 import io.dfarquharson.GraphMonoid._
 
-class NonConformantLineException(message: String) extends Exception(message) {}
-
 trait GrasciiValid {
   def valid(lines: List[String]): Boolean
 }
