@@ -24,7 +24,6 @@ trait GrasciiParse {
 }
 
 object GrasciiParse extends GrasciiParse {
-
   override def parse(lines: List[String]): Graph = {
     lines.map(parseLine).combineAll
   }
