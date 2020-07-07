@@ -10,6 +10,10 @@ class ModelingTest extends FunSuite {
     assert(true)
   }
 
+  test("cwd") {
+    println(new File(".").getAbsolutePath)
+  }
+
   test("simple distances") {
     assert(Functions.distanceBetweenCoordinates(Coordinate(0, 0), Coordinate(1, 1)) == 2)
     assert(Functions.distanceBetweenCoordinates(Coordinate(0, 0), Coordinate(2, 1)) == 3)
@@ -20,10 +24,6 @@ class ModelingTest extends FunSuite {
     assert(Functions.distanceBetweenCoordinates(Coordinate(1, 1), Coordinate(1, 1)) == 0)
     assert(Functions.distanceBetweenCoordinates(Coordinate(1, 1), Coordinate(1, 0)) == 1)
     assert(Functions.distanceBetweenCoordinates(Coordinate(1, 1), Coordinate(2, 2)) == 2)
-  }
-
-  test("cwd") {
-    println(new File(".").getAbsolutePath)
   }
 
 }
