@@ -4,6 +4,8 @@ import java.io.File
 
 import org.scalatest.FunSuite
 
+import scala.annotation.tailrec
+
 class TypesTest extends FunSuite {
 
   def pretty[A](caseClass: A): Unit = {
@@ -66,42 +68,86 @@ class TypesTest extends FunSuite {
   }
 
   test("GridNode") {
-    pretty(GridNode(
-      List(
-        Cell(Coordinate(0, 0), occupied = true, "+"),
-        Cell(Coordinate(0, 1), occupied = true, "|"),
-        Cell(Coordinate(0, 2), occupied = true, "+"),
-        Cell(Coordinate(1, 0), occupied = true, "-"),
-        Cell(Coordinate(1, 1), occupied = true, " "),
-        Cell(Coordinate(1, 2), occupied = true, "-"),
-        Cell(Coordinate(2, 0), occupied = true, "-"),
-        Cell(Coordinate(2, 1), occupied = true, "A"),
-        Cell(Coordinate(2, 2), occupied = true, "-"),
-        Cell(Coordinate(3, 0), occupied = true, "-"),
-        Cell(Coordinate(3, 1), occupied = true, " "),
-        Cell(Coordinate(3, 2), occupied = true, "-"),
-        Cell(Coordinate(4, 0), occupied = true, "+"),
-        Cell(Coordinate(4, 1), occupied = true, "|"),
-        Cell(Coordinate(4, 2), occupied = true, "+")),
-      List(
-        Cell(Coordinate(0, 1), occupied = true, "|"),
-        Cell(Coordinate(4, 1), occupied = true, "|"))
-    ))
+    pretty(
+      GridNode(
+        List(
+          Cell(Coordinate(0, 0), occupied = true, "+"),
+          Cell(Coordinate(0, 1), occupied = true, "|"),
+          Cell(Coordinate(0, 2), occupied = true, "+"),
+          Cell(Coordinate(1, 0), occupied = true, "-"),
+          Cell(Coordinate(1, 1), occupied = true, " "),
+          Cell(Coordinate(1, 2), occupied = true, "-"),
+          Cell(Coordinate(2, 0), occupied = true, "-"),
+          Cell(Coordinate(2, 1), occupied = true, "A"),
+          Cell(Coordinate(2, 2), occupied = true, "-"),
+          Cell(Coordinate(3, 0), occupied = true, "-"),
+          Cell(Coordinate(3, 1), occupied = true, " "),
+          Cell(Coordinate(3, 2), occupied = true, "-"),
+          Cell(Coordinate(4, 0), occupied = true, "+"),
+          Cell(Coordinate(4, 1), occupied = true, "|"),
+          Cell(Coordinate(4, 2), occupied = true, "+")),
+        List(
+          Cell(Coordinate(0, 1), occupied = true, "|"),
+          Cell(Coordinate(4, 1), occupied = true, "|"))
+      ))
   }
 
   test("GridEdge") {
-    GridEdge(
-      "0",
-      List(
+    pretty(
+      GridEdge(
+        "0",
+        List(
+          Cell(Coordinate(4, 1), occupied = true, "0"),
+          Cell(Coordinate(5, 1), occupied = true, "0"),
+          Cell(Coordinate(6, 1), occupied = true, "0"),
+          Cell(Coordinate(7, 1), occupied = true, "0"),
+          Cell(Coordinate(8, 1), occupied = true, "0")),
         Cell(Coordinate(4, 1), occupied = true, "0"),
-        Cell(Coordinate(5, 1), occupied = true, "0")),
-      Cell(Coordinate(4, 1), occupied = true, "0"),
-      Cell(Coordinate(8, 1), occupied = true, "0")
-    )
+        Cell(Coordinate(8, 1), occupied = true, "0"),
+        GridNode(
+          List(Cell(Coordinate(4, 1), occupied = true, "0")),
+          List(Cell(Coordinate(4, 1), occupied = true, "0"))),
+        GridNode(
+          List(Cell(Coordinate(8, 1), occupied = true, "0")),
+          List(Cell(Coordinate(8, 1), occupied = true, "0")))))
   }
 
   test("GridEdgeProbe") {
-    //    GridEdgeProbe
+    pretty(
+      GridEdgeProbe(
+        Grid(List(
+          List(
+            Cell(Coordinate(0, 0), occupied = false, " "),
+            Cell(Coordinate(1, 0), occupied = false, " "),
+            Cell(Coordinate(2, 0), occupied = false, " "),
+            Cell(Coordinate(3, 0), occupied = false, " "),
+            Cell(Coordinate(4, 0), occupied = false, " ")),
+          List(
+            Cell(Coordinate(0, 1), occupied = false, " "),
+            Cell(Coordinate(1, 1), occupied = false, " "),
+            Cell(Coordinate(2, 1), occupied = false, " "),
+            Cell(Coordinate(3, 1), occupied = false, " "),
+            Cell(Coordinate(4, 1), occupied = false, " "))),
+          2, 5),
+        GridEdge(
+          "0",
+          List(
+            Cell(Coordinate(4, 1), occupied = true, "0"),
+            Cell(Coordinate(5, 1), occupied = true, "0"),
+            Cell(Coordinate(6, 1), occupied = true, "0"),
+            Cell(Coordinate(7, 1), occupied = true, "0"),
+            Cell(Coordinate(8, 1), occupied = true, "0")),
+          Cell(Coordinate(4, 1), occupied = true, "0"),
+          Cell(Coordinate(8, 1), occupied = true, "0"),
+          GridNode(
+            List(Cell(Coordinate(4, 1), occupied = true, "0")),
+            List(Cell(Coordinate(4, 1), occupied = true, "0"))),
+          GridNode(
+            List(Cell(Coordinate(8, 1), occupied = true, content = "0")),
+            List(Cell(Coordinate(8, 1), occupied = true, content = "0")))),
+        lastCell = Cell(Coordinate(8, 1), occupied = true, content = "0"),
+        potentialNextCells = List(),
+        distanceToGoal = 0))
   }
 
 }
@@ -135,13 +181,14 @@ object Functions {
     Math.abs(coord1.x - coord2.x) + Math.abs(coord1.y - coord2.y)
   }
 
-  def createEdgeOnGrid(grid: Grid,
-                       sourceNode: GridNode,
-                       targetNode: GridNode,
-                       edge: GridEdge,
-                       edgeProbe: GridEdgeProbe
-                      ): Grid = {
-    if (edgeProbe.lastCell == edgeProbe.targetCell) {
+  @tailrec
+  def createEdgeOnGrid[A](grid: Grid[A],
+                          sourceNode: GridNode[A],
+                          targetNode: GridNode[A],
+                          edge: GridEdge[A],
+                          edgeProbe: GridEdgeProbe[A]
+                         ): Grid[A] = {
+    if (edgeProbe.lastCell == edgeProbe.gridEdge.destinationCell) {
       grid
     } else {
       // TODO: modify these values such that we productively recur
@@ -167,9 +214,7 @@ case class GridEdge[A](edgeContent: A,
                        destinationNode: GridNode[A])
 
 case class GridEdgeProbe[A](grid: Grid[A],
-                            cellsSoFar: List[Cell[A]],
-                            originCell: Cell[A],
-                            targetCell: Cell[A],
+                            gridEdge: GridEdge[A],
                             lastCell: Cell[A],
                             potentialNextCells: List[Cell[A]],
                             distanceToGoal: Int)
