@@ -17,6 +17,16 @@ class PlaygroundTest extends FunSuite {
       (List(Person("A"), Person("B")) ++ List(Person("B"), Person("C"))).distinct)
   }
 
+  test("String multiplication") {
+    println("a" * 8)
+    println("-" * "this".size)
+  }
+
+  test("String explode") {
+    println("string".toList)
+    println(("-" * 10).toList)
+  }
+
 }
 
 case class Person(name: String)
