@@ -154,8 +154,17 @@ class TypesTest extends FunSuite {
 
 class FunctionPlaygroundTest extends FunSuite {
 
-  test("sanity") {
+  test("sanityPositive") {
     assert(true)
+  }
+
+  test("sanityNegative") {
+    try {
+      val impossible = 1 / 0
+      assert(false)
+    } catch {
+      case _: Exception => assert(true)
+    }
   }
 
   test("cwd") {
@@ -207,27 +216,32 @@ object Functions {
   }
 
   // Oof: concrete type commitment
+  // What would the "borders" look like if we weren't dealing with String?
   def nodeToGridNode(node: Node): GridNode[String] = {
+    val border = Border(corner = "+",
+      horizontalSide = "+",
+      verticalSide = "|",
+      middleCell = " ")
     GridNode(
       List(
-        Cell(Coordinate(0, 0), occupied = true, "+"),
-        Cell(Coordinate(0, 1), occupied = true, "|"),
-        Cell(Coordinate(0, 2), occupied = true, "+"),
-        Cell(Coordinate(1, 0), occupied = true, "-"),
-        Cell(Coordinate(1, 1), occupied = true, " "),
-        Cell(Coordinate(1, 2), occupied = true, "-"),
-        Cell(Coordinate(2, 0), occupied = true, "-"),
+        Cell(Coordinate(0, 0), occupied = true, border.corner),
+        Cell(Coordinate(0, 1), occupied = true, border.verticalSide),
+        Cell(Coordinate(0, 2), occupied = true, border.corner),
+        Cell(Coordinate(1, 0), occupied = true, border.horizontalSide),
+        Cell(Coordinate(1, 1), occupied = true, border.middleCell),
+        Cell(Coordinate(1, 2), occupied = true, border.horizontalSide),
+        Cell(Coordinate(2, 0), occupied = true, border.horizontalSide),
         Cell(Coordinate(2, 1), occupied = true, node.name),
-        Cell(Coordinate(2, 2), occupied = true, "-"),
-        Cell(Coordinate(3, 0), occupied = true, "-"),
-        Cell(Coordinate(3, 1), occupied = true, " "),
-        Cell(Coordinate(3, 2), occupied = true, "-"),
-        Cell(Coordinate(4, 0), occupied = true, "+"),
-        Cell(Coordinate(4, 1), occupied = true, "|"),
-        Cell(Coordinate(4, 2), occupied = true, "+")),
+        Cell(Coordinate(2, 2), occupied = true, border.horizontalSide),
+        Cell(Coordinate(3, 0), occupied = true, border.horizontalSide),
+        Cell(Coordinate(3, 1), occupied = true, border.middleCell),
+        Cell(Coordinate(3, 2), occupied = true, border.horizontalSide),
+        Cell(Coordinate(4, 0), occupied = true, border.corner),
+        Cell(Coordinate(4, 1), occupied = true, border.verticalSide),
+        Cell(Coordinate(4, 2), occupied = true, border.corner)),
       List(
-        Cell(Coordinate(0, 1), occupied = true, "|"),
-        Cell(Coordinate(4, 1), occupied = true, "|")))
+        Cell(Coordinate(0, 1), occupied = true, border.verticalSide),
+        Cell(Coordinate(4, 1), occupied = true, border.verticalSide)))
   }
 
   def distanceBetweenCoordinates(coord1: Coordinate, coord2: Coordinate): Int = {
@@ -261,6 +275,9 @@ case class Grid[A](cells: List[List[Cell[A]]],
                    width: Int)
 
 case class GridNode[A](occupiedCells: List[Cell[A]],
+                       // interestingly, availableCellsForEdgeConnections are always verticalSides of the GridNode.
+                       // Figure out the truth lurking there.
+                       // Or maybe that's just arbitrary and we should include horizontalSides as well?
                        availableCellsForEdgeConnections: List[Cell[A]])
 
 case class GridEdge[A](edgeContent: A,
@@ -275,3 +292,8 @@ case class GridEdgeProbe[A](grid: Grid[A],
                             lastCell: Cell[A],
                             potentialNextCells: List[Cell[A]],
                             distanceToGoal: Int)
+
+case class Border[A](corner: A,
+                     horizontalSide: A,
+                     verticalSide: A,
+                     middleCell: A)
