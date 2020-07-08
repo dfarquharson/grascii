@@ -122,3 +122,6 @@ A=5=>D
 |Library|Purpose|GitHub|Docs|
 |-------|-------|------|----|
 |circe|json serialization|https://github.com/circe/circe|https://circe.github.io/circe/|
+
+## Notes
+- From the perspective of mechanical sympathy, this implementation is, to use the scientific term: "shit".
