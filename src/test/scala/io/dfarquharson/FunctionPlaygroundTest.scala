@@ -219,29 +219,29 @@ object Functions {
   // What would the "borders" look like if we weren't dealing with String?
   def nodeToGridNode(node: Node): GridNode[String] = {
     val border = Border(corner = "+",
-      horizontalSide = "+",
-      verticalSide = "|",
-      middleCell = " ")
+      horizontal = "+",
+      vertical = "|",
+      empty = " ")
     GridNode(
       List(
         Cell(Coordinate(0, 0), occupied = true, border.corner),
-        Cell(Coordinate(0, 1), occupied = true, border.verticalSide),
+        Cell(Coordinate(0, 1), occupied = true, border.vertical),
         Cell(Coordinate(0, 2), occupied = true, border.corner),
-        Cell(Coordinate(1, 0), occupied = true, border.horizontalSide),
-        Cell(Coordinate(1, 1), occupied = true, border.middleCell),
-        Cell(Coordinate(1, 2), occupied = true, border.horizontalSide),
-        Cell(Coordinate(2, 0), occupied = true, border.horizontalSide),
+        Cell(Coordinate(1, 0), occupied = true, border.horizontal),
+        Cell(Coordinate(1, 1), occupied = true, border.empty),
+        Cell(Coordinate(1, 2), occupied = true, border.horizontal),
+        Cell(Coordinate(2, 0), occupied = true, border.horizontal),
         Cell(Coordinate(2, 1), occupied = true, node.name),
-        Cell(Coordinate(2, 2), occupied = true, border.horizontalSide),
-        Cell(Coordinate(3, 0), occupied = true, border.horizontalSide),
-        Cell(Coordinate(3, 1), occupied = true, border.middleCell),
-        Cell(Coordinate(3, 2), occupied = true, border.horizontalSide),
+        Cell(Coordinate(2, 2), occupied = true, border.horizontal),
+        Cell(Coordinate(3, 0), occupied = true, border.horizontal),
+        Cell(Coordinate(3, 1), occupied = true, border.empty),
+        Cell(Coordinate(3, 2), occupied = true, border.horizontal),
         Cell(Coordinate(4, 0), occupied = true, border.corner),
-        Cell(Coordinate(4, 1), occupied = true, border.verticalSide),
+        Cell(Coordinate(4, 1), occupied = true, border.vertical),
         Cell(Coordinate(4, 2), occupied = true, border.corner)),
       List(
-        Cell(Coordinate(0, 1), occupied = true, border.verticalSide),
-        Cell(Coordinate(4, 1), occupied = true, border.verticalSide)))
+        Cell(Coordinate(0, 1), occupied = true, border.vertical),
+        Cell(Coordinate(4, 1), occupied = true, border.vertical)))
   }
 
   def distanceBetweenCoordinates(coord1: Coordinate, coord2: Coordinate): Int = {
@@ -294,6 +294,6 @@ case class GridEdgeProbe[A](grid: Grid[A],
                             distanceToGoal: Int)
 
 case class Border[A](corner: A,
-                     horizontalSide: A,
-                     verticalSide: A,
-                     middleCell: A)
+                     horizontal: A,
+                     vertical: A,
+                     empty: A)
