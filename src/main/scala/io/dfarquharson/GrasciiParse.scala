@@ -43,8 +43,7 @@ object GraphMonoid {
     def combine(g1: Graph, g2: Graph): Graph =
       Graph(
         (g1.nodes ++ g2.nodes).distinct,
-        (g1.edges ++ g2.edges).distinct
-      )
+        (g1.edges ++ g2.edges).distinct)
   }
 }
 
