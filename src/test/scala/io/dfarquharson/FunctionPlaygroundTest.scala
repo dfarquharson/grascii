@@ -172,11 +172,64 @@ class FunctionPlaygroundTest extends FunSuite {
     assert(Functions.distanceBetweenCoordinates(Coordinate(1, 1), Coordinate(1, 1)) == 0)
     assert(Functions.distanceBetweenCoordinates(Coordinate(1, 1), Coordinate(1, 0)) == 1)
     assert(Functions.distanceBetweenCoordinates(Coordinate(1, 1), Coordinate(2, 2)) == 2)
+    assert(Functions.distanceBetweenCoordinates(Coordinate(0, 0), Coordinate(0, -1)) == 1)
+  }
+
+  test("Parse a Graph and turn it into a Grid?") {
+    val graph = GrasciiParse.parse(
+      List(
+        "A=0=>B",
+        "B=1=>C",
+        "C=2=>A"
+      )): Graph
+    println(graph)
+    val grid = Functions.graphToGrid(graph)
+    println(grid)
   }
 
 }
 
 object Functions {
+  def graphToGrid[A](graph: Graph): Grid[A] = {
+    // Ensure nodes "breathe"
+    // Ensure nodes have sufficient availableCellsForEdgeConnections
+    // Placement on Grid? That's fluid, right? Figure out the data that represents that decision
+    //
+    // Doesn't matter yet, because the grid will expand as-needed while edges are being drawn, so, fuck it? Pack it tight?
+    // Vertical stacks on stacks on stacks
+    //    graph.nodes.map()
+    //    Grid(
+    //      graph.nodes.map(nodeToGridNode),
+    //      0, 0)
+    Grid(
+      List(),
+      0, 0)
+  }
+
+  // Oof: concrete type commitment
+  def nodeToGridNode(node: Node): GridNode[String] = {
+    GridNode(
+      List(
+        Cell(Coordinate(0, 0), occupied = true, "+"),
+        Cell(Coordinate(0, 1), occupied = true, "|"),
+        Cell(Coordinate(0, 2), occupied = true, "+"),
+        Cell(Coordinate(1, 0), occupied = true, "-"),
+        Cell(Coordinate(1, 1), occupied = true, " "),
+        Cell(Coordinate(1, 2), occupied = true, "-"),
+        Cell(Coordinate(2, 0), occupied = true, "-"),
+        Cell(Coordinate(2, 1), occupied = true, node.name),
+        Cell(Coordinate(2, 2), occupied = true, "-"),
+        Cell(Coordinate(3, 0), occupied = true, "-"),
+        Cell(Coordinate(3, 1), occupied = true, " "),
+        Cell(Coordinate(3, 2), occupied = true, "-"),
+        Cell(Coordinate(4, 0), occupied = true, "+"),
+        Cell(Coordinate(4, 1), occupied = true, "|"),
+        Cell(Coordinate(4, 2), occupied = true, "+")),
+      List(
+        Cell(Coordinate(0, 1), occupied = true, "|"),
+        Cell(Coordinate(4, 1), occupied = true, "|")))
+  }
+
   def distanceBetweenCoordinates(coord1: Coordinate, coord2: Coordinate): Int = {
     Math.abs(coord1.x - coord2.x) + Math.abs(coord1.y - coord2.y)
   }
@@ -199,9 +252,13 @@ object Functions {
 
 case class Coordinate(x: Int, y: Int)
 
+// shouldn't occupied be derived from the content?
 case class Cell[A](coordinate: Coordinate, occupied: Boolean, content: A)
 
-case class Grid[A](cells: List[List[Cell[A]]], height: Int, width: Int)
+// shouldn't height and width be derived from the dimensions of cells?
+case class Grid[A](cells: List[List[Cell[A]]],
+                   height: Int,
+                   width: Int)
 
 case class GridNode[A](occupiedCells: List[Cell[A]],
                        availableCellsForEdgeConnections: List[Cell[A]])
