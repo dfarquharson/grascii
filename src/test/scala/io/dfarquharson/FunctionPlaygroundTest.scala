@@ -34,37 +34,32 @@ class TypesTest extends FunSuite {
   test("Grid") {
     pretty(
       Grid(List(
-        List(
-          Cell(Coordinate(0, 0), occupied = false, " "),
-          Cell(Coordinate(1, 0), occupied = false, " "),
-          Cell(Coordinate(2, 0), occupied = false, " "),
-          Cell(Coordinate(3, 0), occupied = false, " "),
-          Cell(Coordinate(4, 0), occupied = false, " ")),
-        List(
-          Cell(Coordinate(0, 1), occupied = false, " "),
-          Cell(Coordinate(1, 1), occupied = false, " "),
-          Cell(Coordinate(2, 1), occupied = false, " "),
-          Cell(Coordinate(3, 1), occupied = false, " "),
-          Cell(Coordinate(4, 1), occupied = false, " ")),
-        List(
-          Cell(Coordinate(0, 2), occupied = false, " "),
-          Cell(Coordinate(1, 2), occupied = false, " "),
-          Cell(Coordinate(2, 2), occupied = false, " "),
-          Cell(Coordinate(3, 2), occupied = false, " "),
-          Cell(Coordinate(4, 2), occupied = false, " ")),
-        List(
-          Cell(Coordinate(0, 3), occupied = false, " "),
-          Cell(Coordinate(1, 3), occupied = false, " "),
-          Cell(Coordinate(2, 3), occupied = false, " "),
-          Cell(Coordinate(3, 3), occupied = false, " "),
-          Cell(Coordinate(4, 3), occupied = false, " ")),
-        List(
-          Cell(Coordinate(0, 4), occupied = false, " "),
-          Cell(Coordinate(1, 4), occupied = false, " "),
-          Cell(Coordinate(2, 4), occupied = false, " "),
-          Cell(Coordinate(3, 4), occupied = false, " "),
-          Cell(Coordinate(4, 4), occupied = false, " ")),
-      ), 5, 5))
+        Cell(Coordinate(0, 0), occupied = false, " "),
+        Cell(Coordinate(1, 0), occupied = false, " "),
+        Cell(Coordinate(2, 0), occupied = false, " "),
+        Cell(Coordinate(3, 0), occupied = false, " "),
+        Cell(Coordinate(4, 0), occupied = false, " "),
+        Cell(Coordinate(0, 1), occupied = false, " "),
+        Cell(Coordinate(1, 1), occupied = false, " "),
+        Cell(Coordinate(2, 1), occupied = false, " "),
+        Cell(Coordinate(3, 1), occupied = false, " "),
+        Cell(Coordinate(4, 1), occupied = false, " "),
+        Cell(Coordinate(0, 2), occupied = false, " "),
+        Cell(Coordinate(1, 2), occupied = false, " "),
+        Cell(Coordinate(2, 2), occupied = false, " "),
+        Cell(Coordinate(3, 2), occupied = false, " "),
+        Cell(Coordinate(4, 2), occupied = false, " "),
+        Cell(Coordinate(0, 3), occupied = false, " "),
+        Cell(Coordinate(1, 3), occupied = false, " "),
+        Cell(Coordinate(2, 3), occupied = false, " "),
+        Cell(Coordinate(3, 3), occupied = false, " "),
+        Cell(Coordinate(4, 3), occupied = false, " "),
+        Cell(Coordinate(0, 4), occupied = false, " "),
+        Cell(Coordinate(1, 4), occupied = false, " "),
+        Cell(Coordinate(2, 4), occupied = false, " "),
+        Cell(Coordinate(3, 4), occupied = false, " "),
+        Cell(Coordinate(4, 4), occupied = false, " ")),
+        5, 5))
   }
 
   test("GridNode") {
@@ -116,18 +111,16 @@ class TypesTest extends FunSuite {
     pretty(
       GridEdgeProbe(
         Grid(List(
-          List(
-            Cell(Coordinate(0, 0), occupied = false, " "),
-            Cell(Coordinate(1, 0), occupied = false, " "),
-            Cell(Coordinate(2, 0), occupied = false, " "),
-            Cell(Coordinate(3, 0), occupied = false, " "),
-            Cell(Coordinate(4, 0), occupied = false, " ")),
-          List(
-            Cell(Coordinate(0, 1), occupied = false, " "),
-            Cell(Coordinate(1, 1), occupied = false, " "),
-            Cell(Coordinate(2, 1), occupied = false, " "),
-            Cell(Coordinate(3, 1), occupied = false, " "),
-            Cell(Coordinate(4, 1), occupied = false, " "))),
+          Cell(Coordinate(0, 0), occupied = false, " "),
+          Cell(Coordinate(1, 0), occupied = false, " "),
+          Cell(Coordinate(2, 0), occupied = false, " "),
+          Cell(Coordinate(3, 0), occupied = false, " "),
+          Cell(Coordinate(4, 0), occupied = false, " "),
+          Cell(Coordinate(0, 1), occupied = false, " "),
+          Cell(Coordinate(1, 1), occupied = false, " "),
+          Cell(Coordinate(2, 1), occupied = false, " "),
+          Cell(Coordinate(3, 1), occupied = false, " "),
+          Cell(Coordinate(4, 1), occupied = false, " ")),
           2, 5),
         GridEdge(
           "0",
@@ -196,10 +189,23 @@ class FunctionPlaygroundTest extends FunSuite {
     println(grid)
   }
 
+  test("Trouble Graph") {
+    val graph = GrasciiParse.parse(
+      List(
+        "A=0=>B",
+        "B=1=>C",
+        "A=2=>C",
+        "A=3=>D",
+        "C=4=>D",
+        "D=5=>E",
+        "C=6=>E"))
+    println(graph)
+  }
+
 }
 
 object Functions {
-  def graphToGrid[A](graph: Graph): Grid[A] = {
+  def graphToGrid(graph: Graph): Grid[String] = {
     // Ensure nodes "breathe"
     // Ensure nodes have sufficient availableCellsForEdgeConnections
     // Placement on Grid? That's fluid, right? Figure out the data that represents that decision
@@ -211,14 +217,18 @@ object Functions {
     //      graph.nodes.map(nodeToGridNode),
     //      0, 0)
     Grid(
-      List(),
-      0, 0)
+      graph.nodes
+        .map(nodeToGridNode)
+        .flatMap(_.occupiedCells),
+      graph.nodes.length * 3,
+      5)
   }
 
   // Oof: concrete type commitment
   // What would the "borders" look like if we weren't dealing with String?
   def nodeToGridNode(node: Node): GridNode[String] = {
-    val border = Border(corner = "+",
+    val border = Border(
+      corner = "+",
       horizontal = "+",
       vertical = "|",
       empty = " ")
@@ -270,7 +280,7 @@ case class Coordinate(x: Int, y: Int)
 case class Cell[A](coordinate: Coordinate, occupied: Boolean, content: A)
 
 // shouldn't height and width be derived from the dimensions of cells?
-case class Grid[A](cells: List[List[Cell[A]]],
+case class Grid[A](cells: List[Cell[A]],
                    height: Int,
                    width: Int)
 
