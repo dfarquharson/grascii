@@ -118,6 +118,11 @@ A=5=>D
 - [ ] write alternative implementation in clojure
 - [ ] write alternative implementation in python (toolz, hypothesis, pytest, pytest-cov)
 
+## Actual TODO
+- [ ] place nodes on the grid (non-overlapping)
+- [ ] draw actual graphs on the grid
+- [ ] dump out the ascii art
+
 ## Libraries
 |Library|Purpose|GitHub|Docs|
 |-------|-------|------|----|
