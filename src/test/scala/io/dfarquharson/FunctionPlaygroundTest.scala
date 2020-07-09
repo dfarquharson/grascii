@@ -345,10 +345,10 @@ class FunctionPlaygroundTest extends FunSuite {
     assert(result.cells.toSet ==
       Set(
         Cell(Coordinate(0, 0), "X"),
-        Cell(Coordinate(0, 0), "X"),
-        Cell(Coordinate(0, 0), "X"),
-        Cell(Coordinate(0, 0), "X"),
-        Cell(Coordinate(0, 0), "X")))
+        Cell(Coordinate(0, 1), "X"),
+        Cell(Coordinate(0, 2), "X"),
+        Cell(Coordinate(1, 2), "X"),
+        Cell(Coordinate(2, 2), "X")))
   }
 
 }
