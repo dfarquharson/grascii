@@ -227,7 +227,7 @@ class FunctionPlaygroundTest extends FunSuite {
           Coordinate(2, 1)))
   }
 
-  test("Best Available Coordinate") {
+  test("Best Available Coordinate One Reasonable Choice") {
     assert(
       Functions.bestAvailableCoordinate(
         currentCoordinate = Coordinate(1, 1),
@@ -245,6 +245,91 @@ class FunctionPlaygroundTest extends FunSuite {
               Cell(Coordinate(2, 1), " "),
               Cell(Coordinate(2, 2), " ")))))
         .contains(Coordinate(2, 1)))
+  }
+
+  test("Best Available Coordinate Two Reasonable Choices") {
+    val bestAvailable =
+      Functions.bestAvailableCoordinate(
+        currentCoordinate = Coordinate(1, 1),
+        targetCoordinate = Coordinate(2, 2),
+        Functions.gridToGridMap(
+          Grid(
+            List(
+              Cell(Coordinate(0, 0), " "),
+              Cell(Coordinate(0, 1), " "),
+              Cell(Coordinate(0, 2), " "),
+              Cell(Coordinate(1, 0), " "),
+              Cell(Coordinate(1, 1), " "),
+              Cell(Coordinate(1, 2), " "),
+              Cell(Coordinate(2, 0), " "),
+              Cell(Coordinate(2, 1), " "),
+              Cell(Coordinate(2, 2), " ")))))
+    // Current implementation yields Coordinate(1, 2),
+    // but that's incidental and not necessary,
+    // and I only want to encode the necessary in this test.
+    assert(bestAvailable.contains(Coordinate(2, 1))
+      || bestAvailable.contains(Coordinate(1, 2)))
+  }
+
+  test("Best Available Coordinate The Long Way Around") {
+    val bestAvailable =
+      Functions.bestAvailableCoordinate(
+        currentCoordinate = Coordinate(1, 1),
+        targetCoordinate = Coordinate(2, 2),
+        Functions.gridToGridMap(
+          Grid(
+            List(
+              Cell(Coordinate(0, 0), " "),
+              Cell(Coordinate(0, 1), " "),
+              Cell(Coordinate(0, 2), " "),
+              Cell(Coordinate(1, 0), " "),
+              Cell(Coordinate(1, 1), " "),
+              Cell(Coordinate(1, 2), "X"),
+              Cell(Coordinate(2, 0), " "),
+              Cell(Coordinate(2, 1), "X"),
+              Cell(Coordinate(2, 2), " ")))))
+    assert(bestAvailable.contains(Coordinate(1, 0))
+      || bestAvailable.contains(Coordinate(0, 1)))
+  }
+
+  test("Best Available Coordinate Only One Choice") {
+    assert(
+      Functions.bestAvailableCoordinate(
+        currentCoordinate = Coordinate(1, 1),
+        targetCoordinate = Coordinate(2, 2),
+        Functions.gridToGridMap(
+          Grid(
+            List(
+              Cell(Coordinate(0, 0), " "),
+              Cell(Coordinate(0, 1), " "),
+              Cell(Coordinate(0, 2), " "),
+              Cell(Coordinate(1, 0), "X"),
+              Cell(Coordinate(1, 1), " "),
+              Cell(Coordinate(1, 2), "X"),
+              Cell(Coordinate(2, 0), " "),
+              Cell(Coordinate(2, 1), "X"),
+              Cell(Coordinate(2, 2), " ")))))
+        .contains(Coordinate(0, 1)))
+  }
+
+  test("Best Available Coordinate Dead End") {
+    assert(
+      Functions.bestAvailableCoordinate(
+        currentCoordinate = Coordinate(1, 1),
+        targetCoordinate = Coordinate(2, 2),
+        Functions.gridToGridMap(
+          Grid(
+            List(
+              Cell(Coordinate(0, 0), " "),
+              Cell(Coordinate(0, 1), "X"),
+              Cell(Coordinate(0, 2), " "),
+              Cell(Coordinate(1, 0), "X"),
+              Cell(Coordinate(1, 1), " "),
+              Cell(Coordinate(1, 2), "X"),
+              Cell(Coordinate(2, 0), " "),
+              Cell(Coordinate(2, 1), "X"),
+              Cell(Coordinate(2, 2), " ")))))
+        .isEmpty)
   }
 
 }
@@ -337,17 +422,17 @@ object Functions {
   }
 
   @tailrec
-  def createEdgeOnGrid[A](grid: Grid[A],
+  def createEdgeOnGrid[A](gridMap: GridMap[A],
                           sourceNode: GridNode[A],
                           targetNode: GridNode[A],
                           edge: GridEdge[A],
                           edgeProbe: GridEdgeProbe[A]
-                         ): Grid[A] = {
+                         ): GridMap[A] = {
     if (edgeProbe.lastCell == edgeProbe.gridEdge.destinationCell) {
-      grid
+      gridMap
     } else {
       // TODO: modify these values such that we productively recur
-      createEdgeOnGrid(grid, sourceNode, targetNode, edge, edgeProbe)
+      createEdgeOnGrid(gridMap, sourceNode, targetNode, edge, edgeProbe)
     }
   }
 }
@@ -370,7 +455,7 @@ case class GridNode[A](occupiedCells: List[Cell[A]],
 case class GridEdge[A](edgeContent: A,
                        occupiedCells: List[Cell[A]],
                        sourceCell: Cell[A],
-                       destinationCell: Cell[A],
+                       destinationCell: Cell[A], // unfair? Should be given the Set[Coordinate] instead?
                        sourceNode: GridNode[A],
                        destinationNode: GridNode[A])
 
