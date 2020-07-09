@@ -125,3 +125,17 @@ A=5=>D
 
 ## Notes
 - From the perspective of mechanical sympathy, this implementation is, to use the scientific term: "shit".
+
+## The Story
+I like ascii art. I like graphs. Why not make nice little visual representations of graphs with ascii art?
+Sounds fun! Let's do it!
+In the beginning, I was pretty fixated on this idea of a fixed 2D grid where each cell was a single character.
+That's still mostly what this is, but my mind has been E X P A N D E D in the process as well.
+I began to notice a pattern of relying heavily on the 2D "Coordinate" of a given "Cell",
+and thus were some primordial `case class`es born.
+I also found myself realizing that I was looking up those `Coordinate`s in the 2D array A LOT,
+essentially treating that `Grid` as a `Map`, indexed by `Coordinate`.
+So, again I made that implicit structure explicit, and `GridMap` was born.
+
+TL;DR: Programming really is "just Category Theory". Define your "Objects" and "Morphisms" and you're done :)
+ 
