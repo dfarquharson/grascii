@@ -144,6 +144,8 @@ So, again I made that implicit structure explicit, and `GridMap` was born.
 
 TL;DR: Programming really is "just Category Theory". Define your "Objects" and "Morphisms" and you're done :)
 
+P.S. There's _always_ a Monoid Masher in there somewhere ;)
+
 ## Testing
 - Is awesome
 - Is a design technique
