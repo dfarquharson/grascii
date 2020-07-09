@@ -33,7 +33,7 @@ class TypesTest extends FunSuite {
 
   test("Grid") {
     pretty(
-      Grid(List(
+      Grid(Set(
         Cell(Coordinate(0, 0), " "),
         Cell(Coordinate(1, 0), " "),
         Cell(Coordinate(2, 0), " "),
@@ -109,7 +109,7 @@ class TypesTest extends FunSuite {
   test("GridEdgeProbe") {
     pretty(
       GridEdgeProbe(
-        Grid(List(
+        Grid(Set(
           Cell(Coordinate(0, 0), " "),
           Cell(Coordinate(1, 0), " "),
           Cell(Coordinate(2, 0), " "),
@@ -234,7 +234,7 @@ class FunctionPlaygroundTest extends FunSuite {
         targetCoordinate = Coordinate(2, 2),
         Functions.gridToGridMap(
           Grid(
-            List(
+            Set(
               Cell(Coordinate(0, 0), " "),
               Cell(Coordinate(0, 1), " "),
               Cell(Coordinate(0, 2), " "),
@@ -254,7 +254,7 @@ class FunctionPlaygroundTest extends FunSuite {
         targetCoordinate = Coordinate(2, 2),
         Functions.gridToGridMap(
           Grid(
-            List(
+            Set(
               Cell(Coordinate(0, 0), " "),
               Cell(Coordinate(0, 1), " "),
               Cell(Coordinate(0, 2), " "),
@@ -278,7 +278,7 @@ class FunctionPlaygroundTest extends FunSuite {
         targetCoordinate = Coordinate(2, 2),
         Functions.gridToGridMap(
           Grid(
-            List(
+            Set(
               Cell(Coordinate(0, 0), " "),
               Cell(Coordinate(0, 1), " "),
               Cell(Coordinate(0, 2), " "),
@@ -299,7 +299,7 @@ class FunctionPlaygroundTest extends FunSuite {
         targetCoordinate = Coordinate(2, 2),
         Functions.gridToGridMap(
           Grid(
-            List(
+            Set(
               Cell(Coordinate(0, 0), " "),
               Cell(Coordinate(0, 1), " "),
               Cell(Coordinate(0, 2), " "),
@@ -319,7 +319,7 @@ class FunctionPlaygroundTest extends FunSuite {
         targetCoordinate = Coordinate(2, 2),
         Functions.gridToGridMap(
           Grid(
-            List(
+            Set(
               Cell(Coordinate(0, 0), " "),
               Cell(Coordinate(0, 1), "X"),
               Cell(Coordinate(0, 2), " "),
@@ -333,28 +333,27 @@ class FunctionPlaygroundTest extends FunSuite {
   }
 
   test("Point A to Point B Clear Path") {
-    val result: Set[Cell[String]] =
+    val result: Grid[String] =
       Functions.gridMapToGrid(
         Functions.findPath(
           fillContent = "X",
           currentCoordinate = Coordinate(0, 0),
           targetCoordinate = Coordinate(2, 2),
-          gridMap = Functions.gridToGridMap(Grid(List()))))
-        .cells
-        .toSet
+          gridMap = Functions.gridToGridMap(Grid(Set()))))
     println(result)
     assert(
       result ==
-        Set(
-          Cell(Coordinate(0, 0), "X"),
-          Cell(Coordinate(0, 1), "X"),
-          Cell(Coordinate(0, 2), "X"),
-          Cell(Coordinate(1, 2), "X"),
-          Cell(Coordinate(2, 2), "X")))
+        Grid(
+          Set(
+            Cell(Coordinate(0, 0), "X"),
+            Cell(Coordinate(0, 1), "X"),
+            Cell(Coordinate(0, 2), "X"),
+            Cell(Coordinate(1, 2), "X"),
+            Cell(Coordinate(2, 2), "X"))))
   }
 
   test("Point A to Point B with an Obstacle") {
-    val result: Set[Cell[String]] =
+    val result: Grid[String] =
       Functions.gridMapToGrid(
         Functions.findPath(
           fillContent = "X",
@@ -362,28 +361,27 @@ class FunctionPlaygroundTest extends FunSuite {
           targetCoordinate = Coordinate(2, 2),
           gridMap = Functions.gridToGridMap(
             Grid(
-              List(
+              Set(
                 Cell(Coordinate(1, 2), "O"))))))
-        .cells
-        .toSet
     println(result)
     // This illustrates the failure of taking "first best available coordinate"
     // without working that out over a longer distance and seeing what is truly "best" in the long run.
     assert(
       result ==
-        Set(
-          Cell(Coordinate(0, 0), "X"),
-          Cell(Coordinate(0, 1), "X"),
-          Cell(Coordinate(0, 2), "X"),
-          Cell(Coordinate(0, 3), "X"),
-          Cell(Coordinate(1, 2), "O"),
-          Cell(Coordinate(1, 3), "X"),
-          Cell(Coordinate(2, 3), "X"),
-          Cell(Coordinate(2, 2), "X")))
+        Grid(
+          Set(
+            Cell(Coordinate(0, 0), "X"),
+            Cell(Coordinate(0, 1), "X"),
+            Cell(Coordinate(0, 2), "X"),
+            Cell(Coordinate(0, 3), "X"),
+            Cell(Coordinate(1, 2), "O"),
+            Cell(Coordinate(1, 3), "X"),
+            Cell(Coordinate(2, 3), "X"),
+            Cell(Coordinate(2, 2), "X"))))
   }
 
   test("Point A to Point B forced down a Specific Path") {
-    val result: Set[Cell[String]] =
+    val result: Grid[String] =
       Functions.gridMapToGrid(
         Functions.findPath(
           fillContent = "X",
@@ -391,26 +389,25 @@ class FunctionPlaygroundTest extends FunSuite {
           targetCoordinate = Coordinate(2, 2),
           gridMap = Functions.gridToGridMap(
             Grid(
-              List(
+              Set(
                 Cell(Coordinate(0, 2), "O"),
                 Cell(Coordinate(1, 2), "O"),
                 Cell(Coordinate(1, 0), "O"),
                 Cell(Coordinate(2, 0), "O"))))))
-        .cells
-        .toSet
     println(result)
     assert(
       result ==
-        Set(
-          Cell(Coordinate(0, 0), "X"),
-          Cell(Coordinate(0, 1), "X"),
-          Cell(Coordinate(1, 1), "X"),
-          Cell(Coordinate(2, 1), "X"),
-          Cell(Coordinate(2, 2), "X"),
-          Cell(Coordinate(0, 2), "O"),
-          Cell(Coordinate(1, 2), "O"),
-          Cell(Coordinate(1, 0), "O"),
-          Cell(Coordinate(2, 0), "O")))
+        Grid(
+          Set(
+            Cell(Coordinate(0, 0), "X"),
+            Cell(Coordinate(0, 1), "X"),
+            Cell(Coordinate(1, 1), "X"),
+            Cell(Coordinate(2, 1), "X"),
+            Cell(Coordinate(2, 2), "X"),
+            Cell(Coordinate(0, 2), "O"),
+            Cell(Coordinate(1, 2), "O"),
+            Cell(Coordinate(1, 0), "O"),
+            Cell(Coordinate(2, 0), "O"))))
   }
 
   test("Merge Grids No Overlap") {
@@ -418,23 +415,19 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.mergeGrids(
         emptyContent = 0,
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 1), 1),
             Cell(Coordinate(0, 2), 1))),
         Grid(
-          List(
+          Set(
             Cell(Coordinate(1, 0), 1),
-            Cell(Coordinate(2, 0), 1))))
-        .cells
-        .toSet ==
+            Cell(Coordinate(2, 0), 1)))) ==
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 1), 1),
             Cell(Coordinate(0, 2), 1),
             Cell(Coordinate(1, 0), 1),
-            Cell(Coordinate(2, 0), 1)))
-          .cells
-          .toSet)
+            Cell(Coordinate(2, 0), 1))))
   }
 
   test("Merge Grids Some Overlap") {
@@ -442,22 +435,18 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.mergeGrids(
         emptyContent = 0,
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 1), 1),
             Cell(Coordinate(1, 1), 0))),
         Grid(
-          List(
+          Set(
             Cell(Coordinate(1, 0), 1),
-            Cell(Coordinate(1, 1), 1))))
-        .cells
-        .toSet ==
+            Cell(Coordinate(1, 1), 1)))) ==
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 1), 1),
             Cell(Coordinate(1, 1), 1),
-            Cell(Coordinate(1, 0), 1)))
-          .cells
-          .toSet)
+            Cell(Coordinate(1, 0), 1))))
   }
 
   test("Rectangle Single Cell") {
@@ -465,10 +454,10 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.makeRectangleGrid(
         0,
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1)))) ==
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1))))
   }
 
@@ -477,19 +466,15 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.makeRectangleGrid(
         0,
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
-            Cell(Coordinate(1, 1), 1))))
-        .cells
-        .toSet ==
+            Cell(Coordinate(1, 1), 1)))) ==
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 0),
             Cell(Coordinate(1, 0), 0),
-            Cell(Coordinate(1, 1), 1)))
-          .cells
-          .toSet)
+            Cell(Coordinate(1, 1), 1))))
   }
 
   test("Rectangle 2 * 3") {
@@ -497,21 +482,17 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.makeRectangleGrid(
         0,
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
-            Cell(Coordinate(2, 1), 1))))
-        .cells
-        .toSet ==
+            Cell(Coordinate(2, 1), 1)))) ==
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 0),
             Cell(Coordinate(1, 0), 0),
             Cell(Coordinate(1, 1), 0),
             Cell(Coordinate(2, 0), 0),
-            Cell(Coordinate(2, 1), 1)))
-          .cells
-          .toSet)
+            Cell(Coordinate(2, 1), 1))))
   }
 
   test("Rectangle 3 * 3") {
@@ -519,13 +500,11 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.makeRectangleGrid(
         0,
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
-            Cell(Coordinate(2, 2), 1))))
-        .cells
-        .toSet ==
+            Cell(Coordinate(2, 2), 1)))) ==
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 0),
             Cell(Coordinate(0, 2), 0),
@@ -534,16 +513,14 @@ class FunctionPlaygroundTest extends FunSuite {
             Cell(Coordinate(1, 2), 0),
             Cell(Coordinate(2, 0), 0),
             Cell(Coordinate(2, 1), 0),
-            Cell(Coordinate(2, 2), 1)))
-          .cells
-          .toSet)
+            Cell(Coordinate(2, 2), 1))))
   }
 
   test("Grascii Literally One Cell") {
     val result: String =
       Functions.dumpGrascii(
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), " "))))
     println(result)
     assert(result == " ")
@@ -553,7 +530,7 @@ class FunctionPlaygroundTest extends FunSuite {
     val result: String =
       Functions.dumpGrascii(
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), "1"),
             Cell(Coordinate(0, 1), "0"),
             Cell(Coordinate(1, 0), "0"),
@@ -566,7 +543,7 @@ class FunctionPlaygroundTest extends FunSuite {
     val result: String =
       Functions.dumpGrascii(
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 0),
             Cell(Coordinate(0, 2), 1),
@@ -584,7 +561,7 @@ class FunctionPlaygroundTest extends FunSuite {
     val result: String =
       Functions.dumpGrascii(
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 1),
             Cell(Coordinate(0, 2), 1),
@@ -602,7 +579,7 @@ class FunctionPlaygroundTest extends FunSuite {
     val result: String =
       Functions.dumpGrascii(
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 1),
             Cell(Coordinate(0, 2), 1),
@@ -620,7 +597,7 @@ class FunctionPlaygroundTest extends FunSuite {
     val result: String =
       Functions.dumpGrascii(
         Grid(
-          List(
+          Set(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 0),
             Cell(Coordinate(0, 2), 1),
@@ -658,13 +635,13 @@ object Functions {
     Grid(
       graph.nodes
         .map(nodeToGridNode)
-        .flatMap(_.occupiedCells))
+        .flatMap(_.occupiedCells)
+        .toSet)
   }
 
   def gridToGridMap[A](grid: Grid[A]): GridMap[A] = {
     GridMap(
       grid.cells
-        .distinctBy(_.coordinate)
         .groupBy(_.coordinate)
         .view
         .mapValues(_.head)
@@ -672,7 +649,7 @@ object Functions {
   }
 
   def gridMapToGrid[A](gridMap: GridMap[A]): Grid[A] = {
-    Grid(gridMap.cells.values.toList)
+    Grid(gridMap.cells.values.toSet)
   }
 
   def mergeGrids[A](emptyContent: A,
@@ -685,7 +662,7 @@ object Functions {
         .mapValues(xs => xs.find(x => x.content != emptyContent)
           .getOrElse(Cell(xs.head.coordinate, emptyContent)))
         .values
-        .toList)
+        .toSet)
   }
 
   def makeRectangleGrid[A](emptyContent: A,
@@ -702,7 +679,7 @@ object Functions {
         newXs
           .flatMap(x => newYs
             .map(y => Cell(Coordinate(x, y), emptyContent)))
-          .toList))
+          .toSet))
   }
 
   def dumpGrascii[A](grid: Grid[A]): String = {
@@ -711,6 +688,7 @@ object Functions {
       .groupBy(_.coordinate.y)
       .view
       .mapValues(xs => xs
+        .toList
         .sortBy(_.coordinate.x)
         .map(_.content.toString)
         .mkString)
@@ -821,8 +799,7 @@ case class Coordinate(x: Int, y: Int)
 
 case class Cell[A](coordinate: Coordinate, content: A)
 
-// TODO: make this a Set instead
-case class Grid[A](cells: List[Cell[A]])
+case class Grid[A](cells: Set[Cell[A]])
 
 case class GridMap[A](cells: Map[Coordinate, Cell[A]])
 
