@@ -217,6 +217,36 @@ class FunctionPlaygroundTest extends FunSuite {
     assert(Functions.occupiedCell(Cell(Coordinate(0, 0), "0")))
   }
 
+  test("neighborCoordinates") {
+    assert(
+      Functions.neighborCoordinates(Coordinate(1, 1)) ==
+        Set(
+          Coordinate(1, 0),
+          Coordinate(1, 2),
+          Coordinate(0, 1),
+          Coordinate(2, 1)))
+  }
+
+  test("Best Available Coordinate") {
+    assert(
+      Functions.bestAvailableCoordinate(
+        currentCoordinate = Coordinate(1, 1),
+        targetCoordinate = Coordinate(2, 2),
+        Functions.gridToGridMap(
+          Grid(
+            List(
+              Cell(Coordinate(0, 0), " "),
+              Cell(Coordinate(0, 1), " "),
+              Cell(Coordinate(0, 2), " "),
+              Cell(Coordinate(1, 0), " "),
+              Cell(Coordinate(1, 1), " "),
+              Cell(Coordinate(1, 2), "X"),
+              Cell(Coordinate(2, 0), " "),
+              Cell(Coordinate(2, 1), " "),
+              Cell(Coordinate(2, 2), " "))))) ==
+        Some(Coordinate(2, 1)))
+  }
+
 }
 
 object Functions {
@@ -285,6 +315,25 @@ object Functions {
 
   def occupiedCell(cell: Cell[String]): Boolean = {
     !(cell.content == null || cell.content.isEmpty || cell.content.isBlank)
+  }
+
+  def neighborCoordinates(coordinate: Coordinate): Set[Coordinate] = {
+    Set(
+      Coordinate(coordinate.x, coordinate.y - 1),
+      Coordinate(coordinate.x, coordinate.y + 1),
+      Coordinate(coordinate.x - 1, coordinate.y),
+      Coordinate(coordinate.x + 1, coordinate.y))
+  }
+
+  def bestAvailableCoordinate(currentCoordinate: Coordinate,
+                              targetCoordinate: Coordinate,
+                              gridMap: GridMap[String]): Option[Coordinate] = {
+    neighborCoordinates(currentCoordinate)
+      .map(x => (distanceBetweenCoordinates(targetCoordinate, x), occupiedCell(gridMap.cells(x)), x))
+      .toList
+      .sortBy(x => x._1)
+      .find(x => !x._2)
+      .map(x => x._3)
   }
 
   @tailrec
