@@ -413,6 +413,83 @@ class FunctionPlaygroundTest extends FunSuite {
           Cell(Coordinate(2, 0), "O")))
   }
 
+  test("Rectangle Single Cell") {
+    assert(
+      Functions.makeRectangleGrid(
+        0,
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1)))) ==
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1))))
+  }
+
+  test("Rectangle 2 * 2") {
+    assert(
+      Functions.makeRectangleGrid(
+        0,
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(1, 1), 1)))) ==
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 0),
+            Cell(Coordinate(1, 0), 0),
+            Cell(Coordinate(1, 1), 1))))
+  }
+
+  test("Rectangle 2 * 3") {
+    assert(
+      Functions.makeRectangleGrid(
+        0,
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(2, 1), 1)))) ==
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 0),
+            Cell(Coordinate(1, 0), 0),
+            Cell(Coordinate(1, 1), 0),
+            Cell(Coordinate(2, 0), 0),
+            Cell(Coordinate(2, 1), 1))))
+  }
+
+  test("Rectangle 3 * 3") {
+    assert(
+      Functions.makeRectangleGrid(
+        0,
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(2, 2), 1)))) ==
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 0),
+            Cell(Coordinate(0, 2), 0),
+            Cell(Coordinate(1, 0), 0),
+            Cell(Coordinate(1, 1), 0),
+            Cell(Coordinate(1, 2), 0),
+            Cell(Coordinate(2, 0), 0),
+            Cell(Coordinate(2, 1), 0),
+            Cell(Coordinate(2, 2), 1))))
+  }
+
+  test("Grascii Literally One Cell") {
+    val result: String =
+      Functions.dumpGrascii(
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), " "))))
+    println(result)
+    assert(result == " ")
+  }
+
 }
 
 object Functions {
@@ -452,6 +529,24 @@ object Functions {
 
   def gridMapToGrid[A](gridMap: GridMap[A]): Grid[A] = {
     Grid(gridMap.cells.values.toList)
+  }
+
+  def makeRectangleGrid[A](emptyContent: A,
+                           grid: Grid[A]): Grid[A] = {
+    // TODO: make any old lopsided, kittywampus grid into a nice pretty rectangle
+    // - find lowest coordinate. This is "bottom left".
+    // - find highest coordinate. This is "top right".
+    // - fill in all the missing spaces between with emptyContent
+    grid
+  }
+
+  def dumpGrascii[A](grid: Grid[A]): String = {
+    // TODO: the thing properly (proper newlines)
+    grid
+      .cells
+      .map(_.content)
+      .map(_.toString)
+      .mkString
   }
 
   // Oof: concrete type commitment
@@ -534,6 +629,7 @@ object Functions {
     }
   }
 
+  @deprecated("Was an initial idea that didn't pan out. Replaced by findPath")
   @tailrec
   def createEdgeOnGrid[A](gridMap: GridMap[A],
                           sourceNode: GridNode[A],
@@ -565,6 +661,7 @@ case class GridNode[A](occupiedCells: List[Cell[A]],
                        // Or maybe that's just arbitrary and we should include horizontalSides as well?
                        availableCellsForEdgeConnections: List[Cell[A]])
 
+@deprecated("not needed")
 case class GridEdge[A](edgeContent: A,
                        occupiedCells: List[Cell[A]],
                        sourceCell: Cell[A],
@@ -572,6 +669,7 @@ case class GridEdge[A](edgeContent: A,
                        sourceNode: GridNode[A],
                        destinationNode: GridNode[A])
 
+@deprecated("not needed")
 case class GridEdgeProbe[A](grid: Grid[A],
                             gridEdge: GridEdge[A],
                             lastCell: Cell[A],
