@@ -154,3 +154,6 @@ P.S. There's _always_ a Monoid Masher in there somewhere ;)
 - Unless those arbitrary implementations details leak, in which case they matter
 - But don't do that
 - Don't forget to have fun though :)
+
+## Call Outs
+- Refactoring with Types: https://github.com/dfarquharson/grascii/commit/1d1332257b979b1803f2253c7ba232ddfe2d3bc2
