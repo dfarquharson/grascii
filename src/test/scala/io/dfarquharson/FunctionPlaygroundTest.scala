@@ -413,6 +413,53 @@ class FunctionPlaygroundTest extends FunSuite {
           Cell(Coordinate(2, 0), "O")))
   }
 
+  test("Merge Grids No Overlap") {
+    assert(
+      Functions.mergeGrids(
+        emptyContent = 0,
+        Grid(
+          List(
+            Cell(Coordinate(0, 1), 1),
+            Cell(Coordinate(0, 2), 1))),
+        Grid(
+          List(
+            Cell(Coordinate(1, 0), 1),
+            Cell(Coordinate(2, 0), 1))))
+        .cells
+        .toSet ==
+        Grid(
+          List(
+            Cell(Coordinate(0, 1), 1),
+            Cell(Coordinate(0, 2), 1),
+            Cell(Coordinate(1, 0), 1),
+            Cell(Coordinate(2, 0), 1)))
+          .cells
+          .toSet)
+  }
+
+  test("Merge Grids Some Overlap") {
+    assert(
+      Functions.mergeGrids(
+        emptyContent = 0,
+        Grid(
+          List(
+            Cell(Coordinate(0, 1), 1),
+            Cell(Coordinate(1, 1), 0))),
+        Grid(
+          List(
+            Cell(Coordinate(1, 0), 1),
+            Cell(Coordinate(1, 1), 1))))
+        .cells
+        .toSet ==
+        Grid(
+          List(
+            Cell(Coordinate(0, 1), 1),
+            Cell(Coordinate(1, 1), 1),
+            Cell(Coordinate(1, 0), 1)))
+          .cells
+          .toSet)
+  }
+
   test("Rectangle Single Cell") {
     assert(
       Functions.makeRectangleGrid(
@@ -432,13 +479,17 @@ class FunctionPlaygroundTest extends FunSuite {
         Grid(
           List(
             Cell(Coordinate(0, 0), 1),
-            Cell(Coordinate(1, 1), 1)))) ==
+            Cell(Coordinate(1, 1), 1))))
+        .cells
+        .toSet ==
         Grid(
           List(
             Cell(Coordinate(0, 0), 1),
             Cell(Coordinate(0, 1), 0),
             Cell(Coordinate(1, 0), 0),
-            Cell(Coordinate(1, 1), 1))))
+            Cell(Coordinate(1, 1), 1)))
+          .cells
+          .toSet)
   }
 
   test("Rectangle 2 * 3") {
@@ -448,7 +499,9 @@ class FunctionPlaygroundTest extends FunSuite {
         Grid(
           List(
             Cell(Coordinate(0, 0), 1),
-            Cell(Coordinate(2, 1), 1)))) ==
+            Cell(Coordinate(2, 1), 1))))
+        .cells
+        .toSet ==
         Grid(
           List(
             Cell(Coordinate(0, 0), 1),
@@ -456,7 +509,9 @@ class FunctionPlaygroundTest extends FunSuite {
             Cell(Coordinate(1, 0), 0),
             Cell(Coordinate(1, 1), 0),
             Cell(Coordinate(2, 0), 0),
-            Cell(Coordinate(2, 1), 1))))
+            Cell(Coordinate(2, 1), 1)))
+          .cells
+          .toSet)
   }
 
   test("Rectangle 3 * 3") {
@@ -466,7 +521,9 @@ class FunctionPlaygroundTest extends FunSuite {
         Grid(
           List(
             Cell(Coordinate(0, 0), 1),
-            Cell(Coordinate(2, 2), 1)))) ==
+            Cell(Coordinate(2, 2), 1))))
+        .cells
+        .toSet ==
         Grid(
           List(
             Cell(Coordinate(0, 0), 1),
@@ -477,7 +534,9 @@ class FunctionPlaygroundTest extends FunSuite {
             Cell(Coordinate(1, 2), 0),
             Cell(Coordinate(2, 0), 0),
             Cell(Coordinate(2, 1), 0),
-            Cell(Coordinate(2, 2), 1))))
+            Cell(Coordinate(2, 2), 1)))
+          .cells
+          .toSet)
   }
 
   test("Grascii Literally One Cell") {
@@ -488,6 +547,19 @@ class FunctionPlaygroundTest extends FunSuite {
             Cell(Coordinate(0, 0), " "))))
     println(result)
     assert(result == " ")
+  }
+
+  test("Grascii 2 * 2") {
+    val result: String =
+      Functions.dumpGrascii(
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), "1"),
+            Cell(Coordinate(0, 1), "0"),
+            Cell(Coordinate(1, 0), "0"),
+            Cell(Coordinate(1, 1), "1"))))
+    println(result)
+    assert(result == "01\n10\n")
   }
 
 }
@@ -531,13 +603,34 @@ object Functions {
     Grid(gridMap.cells.values.toList)
   }
 
+  def mergeGrids[A](emptyContent: A,
+                    gridA: Grid[A],
+                    gridB: Grid[A]): Grid[A] = {
+    Grid(
+      (gridA.cells ++ gridB.cells)
+        .groupBy(_.coordinate)
+        .view
+        .mapValues(xs => xs.find(x => x.content != emptyContent)
+          .getOrElse(Cell(xs.head.coordinate, emptyContent)))
+        .values
+        .toList)
+  }
+
   def makeRectangleGrid[A](emptyContent: A,
                            grid: Grid[A]): Grid[A] = {
-    // TODO: make any old lopsided, kittywampus grid into a nice pretty rectangle
-    // - find lowest coordinate. This is "bottom left".
-    // - find highest coordinate. This is "top right".
-    // - fill in all the missing spaces between with emptyContent
-    grid
+    val xs = grid.cells.map(_.coordinate.x)
+    val ys = grid.cells.map(_.coordinate.y)
+    val newXs = xs.min to xs.max
+    val newYs = ys.min to ys.max
+    mergeGrids(
+      emptyContent,
+      grid,
+      Grid(
+        // you'll sound cool if you call this a "Cartesian Product", because it is
+        newXs
+          .flatMap(x => newYs
+            .map(y => Cell(Coordinate(x, y), emptyContent)))
+          .toList))
   }
 
   def dumpGrascii[A](grid: Grid[A]): String = {
@@ -650,6 +743,7 @@ case class Coordinate(x: Int, y: Int)
 
 case class Cell[A](coordinate: Coordinate, content: A)
 
+// TODO: make this a Set instead
 case class Grid[A](cells: List[Cell[A]])
 
 case class GridMap[A](cells: Map[Coordinate, Cell[A]])
