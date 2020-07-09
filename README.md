@@ -138,4 +138,12 @@ essentially treating that `Grid` as a `Map`, indexed by `Coordinate`.
 So, again I made that implicit structure explicit, and `GridMap` was born.
 
 TL;DR: Programming really is "just Category Theory". Define your "Objects" and "Morphisms" and you're done :)
- 
+
+## Testing
+- Is awesome
+- Is a design technique
+- Provides rapid feedback
+- Should test desired behavior, not arbitrary implementation details
+- Unless those arbitrary implementations details leak, in which case they matter
+- But don't do that
+- Don't forget to have fun though :)
