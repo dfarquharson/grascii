@@ -121,7 +121,7 @@ A=5=>D
 ## Actual TODO
 - [ ] place nodes on the grid (non-overlapping)
 - [ ] draw actual graphs on the grid
-- [ ] dump out the ascii art
+- [x] dump out the ascii art
 
 ## Libraries
 |Library|Purpose|GitHub|Docs|
