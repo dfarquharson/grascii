@@ -333,22 +333,84 @@ class FunctionPlaygroundTest extends FunSuite {
   }
 
   test("Point A to Point B Clear Path") {
-    val result: Grid[String] =
+    val result: Set[Cell[String]] =
+      Functions.gridMapToGrid(
+        Functions.findPath(
+          fillContent = "X",
+          currentCoordinate = Coordinate(0, 0),
+          targetCoordinate = Coordinate(2, 2),
+          gridMap = Functions.gridToGridMap(Grid(List()))))
+        .cells
+        .toSet
+    println(result)
+    assert(
+      result ==
+        Set(
+          Cell(Coordinate(0, 0), "X"),
+          Cell(Coordinate(0, 1), "X"),
+          Cell(Coordinate(0, 2), "X"),
+          Cell(Coordinate(1, 2), "X"),
+          Cell(Coordinate(2, 2), "X")))
+  }
+
+  test("Point A to Point B with an Obstacle") {
+    val result: Set[Cell[String]] =
       Functions.gridMapToGrid(
         Functions.findPath(
           fillContent = "X",
           currentCoordinate = Coordinate(0, 0),
           targetCoordinate = Coordinate(2, 2),
           gridMap = Functions.gridToGridMap(
-            Grid(List()))))
+            Grid(
+              List(
+                Cell(Coordinate(1, 2), "O"))))))
+        .cells
+        .toSet
     println(result)
-    assert(result.cells.toSet ==
-      Set(
-        Cell(Coordinate(0, 0), "X"),
-        Cell(Coordinate(0, 1), "X"),
-        Cell(Coordinate(0, 2), "X"),
-        Cell(Coordinate(1, 2), "X"),
-        Cell(Coordinate(2, 2), "X")))
+    // This illustrates the failure of taking "first best available coordinate"
+    // without working that out over a longer distance and seeing what is truly "best" in the long run.
+    assert(
+      result ==
+        Set(
+          Cell(Coordinate(0, 0), "X"),
+          Cell(Coordinate(0, 1), "X"),
+          Cell(Coordinate(0, 2), "X"),
+          Cell(Coordinate(0, 3), "X"),
+          Cell(Coordinate(1, 2), "O"),
+          Cell(Coordinate(1, 3), "X"),
+          Cell(Coordinate(2, 3), "X"),
+          Cell(Coordinate(2, 2), "X")))
+  }
+
+  test("Point A to Point B forced down a Specific Path") {
+    val result: Set[Cell[String]] =
+      Functions.gridMapToGrid(
+        Functions.findPath(
+          fillContent = "X",
+          currentCoordinate = Coordinate(0, 0),
+          targetCoordinate = Coordinate(2, 2),
+          gridMap = Functions.gridToGridMap(
+            Grid(
+              List(
+                Cell(Coordinate(0, 2), "O"),
+                Cell(Coordinate(1, 2), "O"),
+                Cell(Coordinate(1, 0), "O"),
+                Cell(Coordinate(2, 0), "O"))))))
+        .cells
+        .toSet
+    println(result)
+    assert(
+      result ==
+        Set(
+          Cell(Coordinate(0, 0), "X"),
+          Cell(Coordinate(0, 1), "X"),
+          Cell(Coordinate(1, 1), "X"),
+          Cell(Coordinate(2, 1), "X"),
+          Cell(Coordinate(2, 2), "X"),
+          Cell(Coordinate(0, 2), "O"),
+          Cell(Coordinate(1, 2), "O"),
+          Cell(Coordinate(1, 0), "O"),
+          Cell(Coordinate(2, 0), "O")))
   }
 
 }
@@ -436,6 +498,9 @@ object Functions {
   def bestAvailableCoordinate(currentCoordinate: Coordinate,
                               targetCoordinate: Coordinate,
                               gridMap: GridMap[String]): Option[Coordinate] = {
+    // when there are more than one "best available coordinate",
+    // we should recursively pursue each one in "branched universes"
+    // and see which coordinate truly ends up being "best" in the end
     neighborCoordinates(currentCoordinate)
       .map(x => (
         distanceBetweenCoordinates(targetCoordinate, x),
