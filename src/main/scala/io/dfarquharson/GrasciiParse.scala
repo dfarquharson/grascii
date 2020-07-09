@@ -31,8 +31,15 @@ object GrasciiParse extends GrasciiParse {
   private def parseLine(s: String): Graph = {
     val pattern = "(.*)=(.*)=>(.*)".r
     val pattern(nodeA, edge, nodeB) = s
-    Graph(List(Node(nodeA), Node(nodeB)),
-      List(Edge(Node(nodeA), Node(nodeB), edge)))
+    Graph(
+      List(
+        Node(nodeA),
+        Node(nodeB)),
+      List(
+        Edge(
+          Node(nodeA),
+          Node(nodeB),
+          edge)))
   }
 }
 
@@ -47,8 +54,11 @@ object GraphMonoid {
   }
 }
 
-case class Graph(nodes: List[Node], edges: List[Edge])
+case class Graph(nodes: List[Node],
+                 edges: List[Edge])
 
 case class Node(name: String)
 
-case class Edge(from: Node, to: Node, kind: String)
+case class Edge(from: Node,
+                to: Node,
+                kind: String)
