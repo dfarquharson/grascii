@@ -559,7 +559,79 @@ class FunctionPlaygroundTest extends FunSuite {
             Cell(Coordinate(1, 0), "0"),
             Cell(Coordinate(1, 1), "1"))))
     println(result)
-    assert(result == "01\n10\n")
+    assert(result == "01\n10")
+  }
+
+  test("Grascii 3 * 3 Cool X") {
+    val result: String =
+      Functions.dumpGrascii(
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 0),
+            Cell(Coordinate(0, 2), 1),
+            Cell(Coordinate(1, 0), 0),
+            Cell(Coordinate(1, 1), 1),
+            Cell(Coordinate(1, 2), 0),
+            Cell(Coordinate(2, 0), 1),
+            Cell(Coordinate(2, 1), 0),
+            Cell(Coordinate(2, 2), 1))))
+    println(result)
+    assert(result == "101\n010\n101")
+  }
+
+  test("Grascii 3 * 3 Cool L") {
+    val result: String =
+      Functions.dumpGrascii(
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 1),
+            Cell(Coordinate(0, 2), 1),
+            Cell(Coordinate(1, 0), 1),
+            Cell(Coordinate(1, 1), 0),
+            Cell(Coordinate(1, 2), 0),
+            Cell(Coordinate(2, 0), 1),
+            Cell(Coordinate(2, 1), 0),
+            Cell(Coordinate(2, 2), 0))))
+    println(result)
+    assert(result == "100\n100\n111")
+  }
+
+  test("Grascii 3 * 3 Cool H") {
+    val result: String =
+      Functions.dumpGrascii(
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 1),
+            Cell(Coordinate(0, 2), 1),
+            Cell(Coordinate(1, 0), 0),
+            Cell(Coordinate(1, 1), 1),
+            Cell(Coordinate(1, 2), 0),
+            Cell(Coordinate(2, 0), 1),
+            Cell(Coordinate(2, 1), 1),
+            Cell(Coordinate(2, 2), 1))))
+    println(result)
+    assert(result == "101\n111\n101")
+  }
+
+  test("Grascii 3 * 3 Cool I") {
+    val result: String =
+      Functions.dumpGrascii(
+        Grid(
+          List(
+            Cell(Coordinate(0, 0), 1),
+            Cell(Coordinate(0, 1), 0),
+            Cell(Coordinate(0, 2), 1),
+            Cell(Coordinate(1, 0), 1),
+            Cell(Coordinate(1, 1), 1),
+            Cell(Coordinate(1, 2), 1),
+            Cell(Coordinate(2, 0), 1),
+            Cell(Coordinate(2, 1), 0),
+            Cell(Coordinate(2, 2), 1))))
+    println(result)
+    assert(result == "111\n010\n111")
   }
 
 }
@@ -634,12 +706,18 @@ object Functions {
   }
 
   def dumpGrascii[A](grid: Grid[A]): String = {
-    // TODO: the thing properly (proper newlines)
     grid
       .cells
-      .map(_.content)
-      .map(_.toString)
-      .mkString
+      .groupBy(_.coordinate.y)
+      .view
+      .mapValues(xs => xs
+        .sortBy(_.coordinate.x)
+        .map(_.content.toString)
+        .mkString)
+      .values
+      .toList
+      .reverse
+      .mkString("\n")
   }
 
   // Oof: concrete type commitment
