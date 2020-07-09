@@ -28,62 +28,61 @@ class TypesTest extends FunSuite {
 
   test("Cell") {
     pretty(
-      Cell(Coordinate(0, 1), occupied = false, " "))
+      Cell(Coordinate(0, 1), " "))
   }
 
   test("Grid") {
     pretty(
       Grid(List(
-        Cell(Coordinate(0, 0), occupied = false, " "),
-        Cell(Coordinate(1, 0), occupied = false, " "),
-        Cell(Coordinate(2, 0), occupied = false, " "),
-        Cell(Coordinate(3, 0), occupied = false, " "),
-        Cell(Coordinate(4, 0), occupied = false, " "),
-        Cell(Coordinate(0, 1), occupied = false, " "),
-        Cell(Coordinate(1, 1), occupied = false, " "),
-        Cell(Coordinate(2, 1), occupied = false, " "),
-        Cell(Coordinate(3, 1), occupied = false, " "),
-        Cell(Coordinate(4, 1), occupied = false, " "),
-        Cell(Coordinate(0, 2), occupied = false, " "),
-        Cell(Coordinate(1, 2), occupied = false, " "),
-        Cell(Coordinate(2, 2), occupied = false, " "),
-        Cell(Coordinate(3, 2), occupied = false, " "),
-        Cell(Coordinate(4, 2), occupied = false, " "),
-        Cell(Coordinate(0, 3), occupied = false, " "),
-        Cell(Coordinate(1, 3), occupied = false, " "),
-        Cell(Coordinate(2, 3), occupied = false, " "),
-        Cell(Coordinate(3, 3), occupied = false, " "),
-        Cell(Coordinate(4, 3), occupied = false, " "),
-        Cell(Coordinate(0, 4), occupied = false, " "),
-        Cell(Coordinate(1, 4), occupied = false, " "),
-        Cell(Coordinate(2, 4), occupied = false, " "),
-        Cell(Coordinate(3, 4), occupied = false, " "),
-        Cell(Coordinate(4, 4), occupied = false, " ")),
-        5, 5))
+        Cell(Coordinate(0, 0), " "),
+        Cell(Coordinate(1, 0), " "),
+        Cell(Coordinate(2, 0), " "),
+        Cell(Coordinate(3, 0), " "),
+        Cell(Coordinate(4, 0), " "),
+        Cell(Coordinate(0, 1), " "),
+        Cell(Coordinate(1, 1), " "),
+        Cell(Coordinate(2, 1), " "),
+        Cell(Coordinate(3, 1), " "),
+        Cell(Coordinate(4, 1), " "),
+        Cell(Coordinate(0, 2), " "),
+        Cell(Coordinate(1, 2), " "),
+        Cell(Coordinate(2, 2), " "),
+        Cell(Coordinate(3, 2), " "),
+        Cell(Coordinate(4, 2), " "),
+        Cell(Coordinate(0, 3), " "),
+        Cell(Coordinate(1, 3), " "),
+        Cell(Coordinate(2, 3), " "),
+        Cell(Coordinate(3, 3), " "),
+        Cell(Coordinate(4, 3), " "),
+        Cell(Coordinate(0, 4), " "),
+        Cell(Coordinate(1, 4), " "),
+        Cell(Coordinate(2, 4), " "),
+        Cell(Coordinate(3, 4), " "),
+        Cell(Coordinate(4, 4), " "))))
   }
 
   test("GridNode") {
     pretty(
       GridNode(
         List(
-          Cell(Coordinate(0, 0), occupied = true, "+"),
-          Cell(Coordinate(0, 1), occupied = true, "|"),
-          Cell(Coordinate(0, 2), occupied = true, "+"),
-          Cell(Coordinate(1, 0), occupied = true, "-"),
-          Cell(Coordinate(1, 1), occupied = true, " "),
-          Cell(Coordinate(1, 2), occupied = true, "-"),
-          Cell(Coordinate(2, 0), occupied = true, "-"),
-          Cell(Coordinate(2, 1), occupied = true, "A"),
-          Cell(Coordinate(2, 2), occupied = true, "-"),
-          Cell(Coordinate(3, 0), occupied = true, "-"),
-          Cell(Coordinate(3, 1), occupied = true, " "),
-          Cell(Coordinate(3, 2), occupied = true, "-"),
-          Cell(Coordinate(4, 0), occupied = true, "+"),
-          Cell(Coordinate(4, 1), occupied = true, "|"),
-          Cell(Coordinate(4, 2), occupied = true, "+")),
+          Cell(Coordinate(0, 0), "+"),
+          Cell(Coordinate(0, 1), "|"),
+          Cell(Coordinate(0, 2), "+"),
+          Cell(Coordinate(1, 0), "-"),
+          Cell(Coordinate(1, 1), " "),
+          Cell(Coordinate(1, 2), "-"),
+          Cell(Coordinate(2, 0), "-"),
+          Cell(Coordinate(2, 1), "A"),
+          Cell(Coordinate(2, 2), "-"),
+          Cell(Coordinate(3, 0), "-"),
+          Cell(Coordinate(3, 1), " "),
+          Cell(Coordinate(3, 2), "-"),
+          Cell(Coordinate(4, 0), "+"),
+          Cell(Coordinate(4, 1), "|"),
+          Cell(Coordinate(4, 2), "+")),
         List(
-          Cell(Coordinate(0, 1), occupied = true, "|"),
-          Cell(Coordinate(4, 1), occupied = true, "|"))
+          Cell(Coordinate(0, 1), "|"),
+          Cell(Coordinate(4, 1), "|"))
       ))
   }
 
@@ -92,55 +91,62 @@ class TypesTest extends FunSuite {
       GridEdge(
         "0",
         List(
-          Cell(Coordinate(4, 1), occupied = true, "0"),
-          Cell(Coordinate(5, 1), occupied = true, "0"),
-          Cell(Coordinate(6, 1), occupied = true, "0"),
-          Cell(Coordinate(7, 1), occupied = true, "0"),
-          Cell(Coordinate(8, 1), occupied = true, "0")),
-        Cell(Coordinate(4, 1), occupied = true, "0"),
-        Cell(Coordinate(8, 1), occupied = true, "0"),
+          Cell(Coordinate(4, 1), "0"),
+          Cell(Coordinate(5, 1), "0"),
+          Cell(Coordinate(6, 1), "0"),
+          Cell(Coordinate(7, 1), "0"),
+          Cell(Coordinate(8, 1), "0")),
+        Cell(Coordinate(4, 1), "0"),
+        Cell(Coordinate(8, 1), "0"),
         GridNode(
-          List(Cell(Coordinate(4, 1), occupied = true, "0")),
-          List(Cell(Coordinate(4, 1), occupied = true, "0"))),
+          List(Cell(Coordinate(4, 1), "0")),
+          List(Cell(Coordinate(4, 1), "0"))),
         GridNode(
-          List(Cell(Coordinate(8, 1), occupied = true, "0")),
-          List(Cell(Coordinate(8, 1), occupied = true, "0")))))
+          List(Cell(Coordinate(8, 1), "0")),
+          List(Cell(Coordinate(8, 1), "0")))))
   }
 
   test("GridEdgeProbe") {
     pretty(
       GridEdgeProbe(
         Grid(List(
-          Cell(Coordinate(0, 0), occupied = false, " "),
-          Cell(Coordinate(1, 0), occupied = false, " "),
-          Cell(Coordinate(2, 0), occupied = false, " "),
-          Cell(Coordinate(3, 0), occupied = false, " "),
-          Cell(Coordinate(4, 0), occupied = false, " "),
-          Cell(Coordinate(0, 1), occupied = false, " "),
-          Cell(Coordinate(1, 1), occupied = false, " "),
-          Cell(Coordinate(2, 1), occupied = false, " "),
-          Cell(Coordinate(3, 1), occupied = false, " "),
-          Cell(Coordinate(4, 1), occupied = false, " ")),
-          2, 5),
+          Cell(Coordinate(0, 0), " "),
+          Cell(Coordinate(1, 0), " "),
+          Cell(Coordinate(2, 0), " "),
+          Cell(Coordinate(3, 0), " "),
+          Cell(Coordinate(4, 0), " "),
+          Cell(Coordinate(0, 1), " "),
+          Cell(Coordinate(1, 1), " "),
+          Cell(Coordinate(2, 1), " "),
+          Cell(Coordinate(3, 1), " "),
+          Cell(Coordinate(4, 1), " "))),
         GridEdge(
           "0",
           List(
-            Cell(Coordinate(4, 1), occupied = true, "0"),
-            Cell(Coordinate(5, 1), occupied = true, "0"),
-            Cell(Coordinate(6, 1), occupied = true, "0"),
-            Cell(Coordinate(7, 1), occupied = true, "0"),
-            Cell(Coordinate(8, 1), occupied = true, "0")),
-          Cell(Coordinate(4, 1), occupied = true, "0"),
-          Cell(Coordinate(8, 1), occupied = true, "0"),
+            Cell(Coordinate(4, 1), "0"),
+            Cell(Coordinate(5, 1), "0"),
+            Cell(Coordinate(6, 1), "0"),
+            Cell(Coordinate(7, 1), "0"),
+            Cell(Coordinate(8, 1), "0")),
+          Cell(Coordinate(4, 1), "0"),
+          Cell(Coordinate(8, 1), "0"),
           GridNode(
-            List(Cell(Coordinate(4, 1), occupied = true, "0")),
-            List(Cell(Coordinate(4, 1), occupied = true, "0"))),
+            List(Cell(Coordinate(4, 1), "0")),
+            List(Cell(Coordinate(4, 1), "0"))),
           GridNode(
-            List(Cell(Coordinate(8, 1), occupied = true, content = "0")),
-            List(Cell(Coordinate(8, 1), occupied = true, content = "0")))),
-        lastCell = Cell(Coordinate(8, 1), occupied = true, content = "0"),
+            List(Cell(Coordinate(8, 1), content = "0")),
+            List(Cell(Coordinate(8, 1), content = "0")))),
+        lastCell = Cell(Coordinate(8, 1), content = "0"),
         potentialNextCells = List(),
         distanceToGoal = 0))
+  }
+
+  test("GridMap") {
+    pretty(
+      GridMap(Map(
+        Coordinate(0, 0) -> Cell(Coordinate(0, 0), " "),
+        Coordinate(0, 1) -> Cell(Coordinate(0, 1), " "),
+        Coordinate(1, 1) -> Cell(Coordinate(1, 1), " "))))
   }
 
 }
@@ -202,6 +208,14 @@ class FunctionPlaygroundTest extends FunSuite {
     println(graph)
   }
 
+  test("occupiedCell(Cell[String])") {
+    assert(!Functions.occupiedCell(Cell(Coordinate(0, 0), " ")))
+    assert(!Functions.occupiedCell(Cell(Coordinate(0, 0), null)))
+    assert(!Functions.occupiedCell(Cell(Coordinate(0, 0), "")))
+    assert(Functions.occupiedCell(Cell(Coordinate(0, 0), "1")))
+    assert(Functions.occupiedCell(Cell(Coordinate(0, 0), "0")))
+  }
+
 }
 
 object Functions {
@@ -210,7 +224,8 @@ object Functions {
     // Ensure nodes have sufficient availableCellsForEdgeConnections
     // Placement on Grid? That's fluid, right? Figure out the data that represents that decision
     //
-    // Doesn't matter yet, because the grid will expand as-needed while edges are being drawn, so, fuck it? Pack it tight?
+    // Doesn't matter yet, because the grid will expand as-needed while edges are being drawn,
+    // so, fuck it? Pack it tight?
     // Vertical stacks on stacks on stacks
     //    graph.nodes.map()
     //    Grid(
@@ -219,9 +234,15 @@ object Functions {
     Grid(
       graph.nodes
         .map(nodeToGridNode)
-        .flatMap(_.occupiedCells),
-      graph.nodes.length * 3,
-      5)
+        .flatMap(_.occupiedCells))
+  }
+
+  def gridToGridMap[A](grid: Grid[A]): GridMap[A] = {
+    GridMap(
+      grid.cells
+        .distinctBy(_.coordinate)
+        .groupBy(_.coordinate)
+        .view.mapValues(_.head).toMap)
   }
 
   // Oof: concrete type commitment
@@ -234,28 +255,32 @@ object Functions {
       empty = " ")
     GridNode(
       List(
-        Cell(Coordinate(0, 0), occupied = true, border.corner),
-        Cell(Coordinate(0, 1), occupied = true, border.vertical),
-        Cell(Coordinate(0, 2), occupied = true, border.corner),
-        Cell(Coordinate(1, 0), occupied = true, border.horizontal),
-        Cell(Coordinate(1, 1), occupied = true, border.empty),
-        Cell(Coordinate(1, 2), occupied = true, border.horizontal),
-        Cell(Coordinate(2, 0), occupied = true, border.horizontal),
-        Cell(Coordinate(2, 1), occupied = true, node.name),
-        Cell(Coordinate(2, 2), occupied = true, border.horizontal),
-        Cell(Coordinate(3, 0), occupied = true, border.horizontal),
-        Cell(Coordinate(3, 1), occupied = true, border.empty),
-        Cell(Coordinate(3, 2), occupied = true, border.horizontal),
-        Cell(Coordinate(4, 0), occupied = true, border.corner),
-        Cell(Coordinate(4, 1), occupied = true, border.vertical),
-        Cell(Coordinate(4, 2), occupied = true, border.corner)),
+        Cell(Coordinate(0, 0), border.corner),
+        Cell(Coordinate(0, 1), border.vertical),
+        Cell(Coordinate(0, 2), border.corner),
+        Cell(Coordinate(1, 0), border.horizontal),
+        Cell(Coordinate(1, 1), border.empty),
+        Cell(Coordinate(1, 2), border.horizontal),
+        Cell(Coordinate(2, 0), border.horizontal),
+        Cell(Coordinate(2, 1), node.name),
+        Cell(Coordinate(2, 2), border.horizontal),
+        Cell(Coordinate(3, 0), border.horizontal),
+        Cell(Coordinate(3, 1), border.empty),
+        Cell(Coordinate(3, 2), border.horizontal),
+        Cell(Coordinate(4, 0), border.corner),
+        Cell(Coordinate(4, 1), border.vertical),
+        Cell(Coordinate(4, 2), border.corner)),
       List(
-        Cell(Coordinate(0, 1), occupied = true, border.vertical),
-        Cell(Coordinate(4, 1), occupied = true, border.vertical)))
+        Cell(Coordinate(0, 1), border.vertical),
+        Cell(Coordinate(4, 1), border.vertical)))
   }
 
   def distanceBetweenCoordinates(coord1: Coordinate, coord2: Coordinate): Int = {
     Math.abs(coord1.x - coord2.x) + Math.abs(coord1.y - coord2.y)
+  }
+
+  def occupiedCell(cell: Cell[String]): Boolean = {
+    !(cell.content == null || cell.content.isEmpty || cell.content.isBlank)
   }
 
   @tailrec
@@ -276,16 +301,15 @@ object Functions {
 
 case class Coordinate(x: Int, y: Int)
 
-// shouldn't occupied be derived from the content?
-case class Cell[A](coordinate: Coordinate, occupied: Boolean, content: A)
+case class Cell[A](coordinate: Coordinate, content: A)
 
-// shouldn't height and width be derived from the dimensions of cells?
-case class Grid[A](cells: List[Cell[A]],
-                   height: Int,
-                   width: Int)
+case class Grid[A](cells: List[Cell[A]])
+
+case class GridMap[A](cells: Map[Coordinate, Cell[A]])
 
 case class GridNode[A](occupiedCells: List[Cell[A]],
-                       // interestingly, availableCellsForEdgeConnections are always verticalSides of the GridNode.
+                       // interestingly, availableCellsForEdgeConnections are always
+                       // verticalSides of the GridNode.
                        // Figure out the truth lurking there.
                        // Or maybe that's just arbitrary and we should include horizontalSides as well?
                        availableCellsForEdgeConnections: List[Cell[A]])
