@@ -64,7 +64,7 @@ class TypesTest extends FunSuite {
   test("GridNode") {
     pretty(
       GridNode(
-        List(
+        Set(
           Cell(Coordinate(0, 0), "+"),
           Cell(Coordinate(0, 1), "|"),
           Cell(Coordinate(0, 2), "+"),
@@ -80,7 +80,7 @@ class TypesTest extends FunSuite {
           Cell(Coordinate(4, 0), "+"),
           Cell(Coordinate(4, 1), "|"),
           Cell(Coordinate(4, 2), "+")),
-        List(
+        Set(
           Cell(Coordinate(0, 1), "|"),
           Cell(Coordinate(4, 1), "|"))
       ))
@@ -99,11 +99,11 @@ class TypesTest extends FunSuite {
         Cell(Coordinate(4, 1), "0"),
         Cell(Coordinate(8, 1), "0"),
         GridNode(
-          List(Cell(Coordinate(4, 1), "0")),
-          List(Cell(Coordinate(4, 1), "0"))),
+          Set(Cell(Coordinate(4, 1), "0")),
+          Set(Cell(Coordinate(4, 1), "0"))),
         GridNode(
-          List(Cell(Coordinate(8, 1), "0")),
-          List(Cell(Coordinate(8, 1), "0")))))
+          Set(Cell(Coordinate(8, 1), "0")),
+          Set(Cell(Coordinate(8, 1), "0")))))
   }
 
   test("GridEdgeProbe") {
@@ -131,11 +131,11 @@ class TypesTest extends FunSuite {
           Cell(Coordinate(4, 1), "0"),
           Cell(Coordinate(8, 1), "0"),
           GridNode(
-            List(Cell(Coordinate(4, 1), "0")),
-            List(Cell(Coordinate(4, 1), "0"))),
+            Set(Cell(Coordinate(4, 1), "0")),
+            Set(Cell(Coordinate(4, 1), "0"))),
           GridNode(
-            List(Cell(Coordinate(8, 1), content = "0")),
-            List(Cell(Coordinate(8, 1), content = "0")))),
+            Set(Cell(Coordinate(8, 1), content = "0")),
+            Set(Cell(Coordinate(8, 1), content = "0")))),
         lastCell = Cell(Coordinate(8, 1), content = "0"),
         potentialNextCells = List(),
         distanceToGoal = 0))
@@ -611,12 +611,21 @@ class FunctionPlaygroundTest extends FunSuite {
     assert(result == "111\n010\n111")
   }
 
+  test("Grascii a Single Node") {
+    val result: String = Functions.dumpGrascii(
+      Grid(
+        Functions.nodeToGridNode(
+          Node("A"))
+          .occupiedCells))
+    println(result)
+  }
+
 }
 
 object Functions {
   val border: Border[String] = Border(
     corner = "+",
-    horizontal = "+",
+    horizontal = "-",
     vertical = "|",
     empty = " ")
 
@@ -702,7 +711,7 @@ object Functions {
   // What would the "borders" look like if we weren't dealing with String?
   def nodeToGridNode(node: Node): GridNode[String] = {
     GridNode(
-      List(
+      Set(
         Cell(Coordinate(0, 0), border.corner),
         Cell(Coordinate(0, 1), border.vertical),
         Cell(Coordinate(0, 2), border.corner),
@@ -718,7 +727,7 @@ object Functions {
         Cell(Coordinate(4, 0), border.corner),
         Cell(Coordinate(4, 1), border.vertical),
         Cell(Coordinate(4, 2), border.corner)),
-      List(
+      Set(
         Cell(Coordinate(0, 1), border.vertical),
         Cell(Coordinate(4, 1), border.vertical)))
   }
@@ -803,12 +812,12 @@ case class Grid[A](cells: Set[Cell[A]])
 
 case class GridMap[A](cells: Map[Coordinate, Cell[A]])
 
-case class GridNode[A](occupiedCells: List[Cell[A]],
+case class GridNode[A](occupiedCells: Set[Cell[A]],
                        // interestingly, availableCellsForEdgeConnections are always
                        // verticalSides of the GridNode.
                        // Figure out the truth lurking there.
                        // Or maybe that's just arbitrary and we should include horizontalSides as well?
-                       availableCellsForEdgeConnections: List[Cell[A]])
+                       availableCellsForEdgeConnections: Set[Cell[A]])
 
 @deprecated("not needed")
 case class GridEdge[A](edgeContent: A,
