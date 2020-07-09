@@ -146,6 +146,13 @@ TL;DR: Programming really is "just Category Theory". Define your "Objects" and "
 
 P.S. There's _always_ a Monoid Masher in there somewhere ;)
 
+## Functional Programming
+- Data and Functions (Objects and Morphisms)
+- Referentially Transparent (No implicit params or implicit effects. No implicit anything!)
+- Immutable State
+- Not just about avoiding mutable state, but also about avoiding _incidental_ state
+  - This might even be _more_ important than immutability!
+
 ## Testing
 - Is awesome
 - Is a design technique
