@@ -332,6 +332,25 @@ class FunctionPlaygroundTest extends FunSuite {
         .isEmpty)
   }
 
+  test("Point A to Point B Clear Path") {
+    val result: Grid[String] =
+      Functions.gridMapToGrid(
+        Functions.findPath(
+          fillContent = "X",
+          currentCoordinate = Coordinate(0, 0),
+          targetCoordinate = Coordinate(2, 2),
+          gridMap = Functions.gridToGridMap(
+            Grid(List()))))
+    println(result)
+    assert(result.cells.toSet ==
+      Set(
+        Cell(Coordinate(0, 0), "X"),
+        Cell(Coordinate(0, 0), "X"),
+        Cell(Coordinate(0, 0), "X"),
+        Cell(Coordinate(0, 0), "X"),
+        Cell(Coordinate(0, 0), "X")))
+  }
+
 }
 
 object Functions {
@@ -367,6 +386,10 @@ object Functions {
         .view
         .mapValues(_.head)
         .toMap)
+  }
+
+  def gridMapToGrid[A](gridMap: GridMap[A]): Grid[A] = {
+    Grid(gridMap.cells.values.toList)
   }
 
   // Oof: concrete type commitment
@@ -414,11 +437,36 @@ object Functions {
                               targetCoordinate: Coordinate,
                               gridMap: GridMap[String]): Option[Coordinate] = {
     neighborCoordinates(currentCoordinate)
-      .map(x => (distanceBetweenCoordinates(targetCoordinate, x), occupiedCell(gridMap.cells(x)), x))
+      .map(x => (
+        distanceBetweenCoordinates(targetCoordinate, x),
+        occupiedCell(gridMap.cells.getOrElse(x, Cell(Coordinate(-1, -1), " "))),
+        x))
       .toList
       .sortBy(x => x._1)
       .find(x => !x._2)
       .map(x => x._3)
+  }
+
+  @tailrec
+  def findPath(fillContent: String,
+               currentCoordinate: Coordinate,
+               targetCoordinate: Coordinate,
+               gridMap: GridMap[String]): GridMap[String] = {
+    val gridWithCurrent = GridMap(gridMap.cells + (currentCoordinate -> Cell(currentCoordinate, fillContent)))
+    if (currentCoordinate == targetCoordinate) {
+      gridWithCurrent
+    } else {
+      val best = bestAvailableCoordinate(currentCoordinate, targetCoordinate, gridWithCurrent)
+      if (best.isEmpty) {
+        gridWithCurrent
+      } else {
+        findPath(
+          fillContent,
+          best.get,
+          targetCoordinate,
+          GridMap(gridWithCurrent.cells + (best.get -> Cell(best.get, fillContent))))
+      }
+    }
   }
 
   @tailrec
