@@ -243,14 +243,14 @@ class FunctionPlaygroundTest extends FunSuite {
               Cell(Coordinate(1, 2), "X"),
               Cell(Coordinate(2, 0), " "),
               Cell(Coordinate(2, 1), " "),
-              Cell(Coordinate(2, 2), " "))))) ==
-        Some(Coordinate(2, 1)))
+              Cell(Coordinate(2, 2), " ")))))
+        .contains(Coordinate(2, 1)))
   }
 
 }
 
 object Functions {
-  val border = Border(
+  val border: Border[String] = Border(
     corner = "+",
     horizontal = "+",
     vertical = "|",
