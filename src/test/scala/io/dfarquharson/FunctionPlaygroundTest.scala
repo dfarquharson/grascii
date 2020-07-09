@@ -145,8 +145,9 @@ class TypesTest extends FunSuite {
     pretty(
       GridMap(Map(
         Coordinate(0, 0) -> Cell(Coordinate(0, 0), " "),
-        Coordinate(0, 1) -> Cell(Coordinate(0, 1), " "),
-        Coordinate(1, 1) -> Cell(Coordinate(1, 1), " "))))
+        Coordinate(0, 1) -> Cell(Coordinate(0, 1), "x"),
+        Coordinate(1, 1) -> Cell(Coordinate(1, 1), "x"),
+        Coordinate(1, 1) -> Cell(Coordinate(2, 1), " "))))
   }
 
 }
@@ -219,6 +220,12 @@ class FunctionPlaygroundTest extends FunSuite {
 }
 
 object Functions {
+  val border = Border(
+    corner = "+",
+    horizontal = "+",
+    vertical = "|",
+    empty = " ")
+
   def graphToGrid(graph: Graph): Grid[String] = {
     // Ensure nodes "breathe"
     // Ensure nodes have sufficient availableCellsForEdgeConnections
@@ -242,17 +249,14 @@ object Functions {
       grid.cells
         .distinctBy(_.coordinate)
         .groupBy(_.coordinate)
-        .view.mapValues(_.head).toMap)
+        .view
+        .mapValues(_.head)
+        .toMap)
   }
 
   // Oof: concrete type commitment
   // What would the "borders" look like if we weren't dealing with String?
   def nodeToGridNode(node: Node): GridNode[String] = {
-    val border = Border(
-      corner = "+",
-      horizontal = "+",
-      vertical = "|",
-      empty = " ")
     GridNode(
       List(
         Cell(Coordinate(0, 0), border.corner),
