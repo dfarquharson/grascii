@@ -150,6 +150,9 @@ P.S. There's _always_ a Monoid Masher in there somewhere ;)
 - Is awesome
 - Is a design technique
 - Provides rapid feedback
+- Is an experiment playground
+- Is a rapid fire version of the scientific method
+- Is incredibly fun!
 - Should test desired behavior, not arbitrary implementation details
 - Unless those arbitrary implementations details leak, in which case they matter
 - But don't do that
