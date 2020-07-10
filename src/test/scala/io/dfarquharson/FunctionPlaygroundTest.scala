@@ -611,6 +611,56 @@ class FunctionPlaygroundTest extends FunSuite {
     assert(result == "111\n010\n111")
   }
 
+  test("Merge Grids Without Overlapping") {
+    val result: Grid[String] =
+      Functions.mergeGridsNoOverlap(
+        " ",
+        Grid(
+          Functions.nodeToGridNode(
+            Node("A"))
+            .occupiedCells
+            .map(cell => Cell(cell.coordinate, "A"))),
+        Grid(
+          Functions.nodeToGridNode(
+            Node("B"))
+            .occupiedCells
+            .map(cell => Cell(cell.coordinate, "B"))))
+    assert(
+      result ==
+        Grid(
+          Set(
+            Cell(Coordinate(0, 0), "A"),
+            Cell(Coordinate(1, 0), "A"),
+            Cell(Coordinate(2, 0), "A"),
+            Cell(Coordinate(3, 0), "A"),
+            Cell(Coordinate(4, 0), "A"),
+            Cell(Coordinate(0, 1), "A"),
+            Cell(Coordinate(1, 1), "A"),
+            Cell(Coordinate(2, 1), "A"),
+            Cell(Coordinate(3, 1), "A"),
+            Cell(Coordinate(4, 1), "A"),
+            Cell(Coordinate(0, 2), "A"),
+            Cell(Coordinate(1, 2), "A"),
+            Cell(Coordinate(2, 2), "A"),
+            Cell(Coordinate(3, 2), "A"),
+            Cell(Coordinate(4, 2), "A"),
+            Cell(Coordinate(0, 3), "B"),
+            Cell(Coordinate(1, 3), "B"),
+            Cell(Coordinate(2, 3), "B"),
+            Cell(Coordinate(3, 3), "B"),
+            Cell(Coordinate(4, 3), "B"),
+            Cell(Coordinate(0, 4), "B"),
+            Cell(Coordinate(1, 4), "B"),
+            Cell(Coordinate(2, 4), "B"),
+            Cell(Coordinate(3, 4), "B"),
+            Cell(Coordinate(4, 4), "B"),
+            Cell(Coordinate(0, 5), "B"),
+            Cell(Coordinate(1, 5), "B"),
+            Cell(Coordinate(2, 5), "B"),
+            Cell(Coordinate(3, 5), "B"),
+            Cell(Coordinate(4, 5), "B"))))
+  }
+
   test("Grascii a Single Node") {
     val result: String = Functions.dumpGrascii(
       Grid(
@@ -618,6 +668,28 @@ class FunctionPlaygroundTest extends FunSuite {
           Node("A"))
           .occupiedCells))
     println(result)
+    assert(result == "+---+\n| A |\n+---+")
+  }
+
+  test("Grascii Two Nodes") {
+    val result: String =
+      Functions.dumpGrascii(
+        Functions.makeRectangleGrid(
+          " ",
+          Functions.mergeGridsNoOverlap(
+            " ",
+            Grid(
+              Functions.nodeToGridNode(
+                Node("A"))
+                .occupiedCells
+                .map(cell => Cell(cell.coordinate, "A"))),
+            Grid(
+              Functions.nodeToGridNode(
+                Node("B"))
+                .occupiedCells
+                .map(cell => Cell(cell.coordinate, "B"))))))
+    println(result)
+    assert(result == "BBBBB\nBBBBB\nBBBBB\nAAAAA\nAAAAA\nAAAAA")
   }
 
 }
@@ -661,6 +733,17 @@ object Functions {
     Grid(gridMap.cells.values.toSet)
   }
 
+  def translate[A](grid: Grid[A], x: Int, y: Int): Grid[A] = {
+    Grid(
+      grid
+        .cells
+        .map(cell => Cell(
+          Coordinate(
+            cell.coordinate.x + x,
+            cell.coordinate.y + y),
+          cell.content)))
+  }
+
   def mergeGrids[A](emptyContent: A,
                     gridA: Grid[A],
                     gridB: Grid[A]): Grid[A] = {
@@ -672,6 +755,16 @@ object Functions {
           .getOrElse(Cell(xs.head.coordinate, emptyContent)))
         .values
         .toSet)
+  }
+
+  def mergeGridsNoOverlap[A](emptyContent: A,
+                             gridA: Grid[A],
+                             gridB: Grid[A]): Grid[A] = {
+    val maxY = gridA.cells.map(_.coordinate.y).max
+    mergeGrids(
+      emptyContent,
+      gridA,
+      translate(gridB, 0, maxY + 1))
   }
 
   def makeRectangleGrid[A](emptyContent: A,
@@ -695,14 +788,13 @@ object Functions {
     grid
       .cells
       .groupBy(_.coordinate.y)
-      .view
-      .mapValues(xs => xs
+      .toList
+      .sortBy(_._1)
+      .map(_._2
         .toList
         .sortBy(_.coordinate.x)
         .map(_.content.toString)
         .mkString)
-      .values
-      .toList
       .reverse
       .mkString("\n")
   }
