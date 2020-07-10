@@ -185,15 +185,15 @@ class FunctionPlaygroundTest extends FunSuite {
   }
 
   test("Parse a Graph and turn it into a Grid?") {
-    val graph = GrasciiParse.parse(
+    val graph: Graph = GrasciiParse.parse(
       List(
         "A=0=>B",
         "B=1=>C",
-        "C=2=>A"
-      )): Graph
+        "C=2=>A"))
     println(graph)
     val grid = Functions.graphToGrid(graph)
     println(grid)
+    println(Functions.grascii(grid))
   }
 
   test("Trouble Graph") {
@@ -614,17 +614,11 @@ class FunctionPlaygroundTest extends FunSuite {
   test("Merge Grids Without Overlapping") {
     val result: Grid[String] =
       Functions.mergeGridsNoOverlap(
-        " ",
-        Grid(
-          Functions.nodeToGridNode(
-            Node("A"))
-            .occupiedCells
-            .map(cell => Cell(cell.coordinate, "A"))),
-        Grid(
-          Functions.nodeToGridNode(
-            Node("B"))
-            .occupiedCells
-            .map(cell => Cell(cell.coordinate, "B"))))
+        emptyContent = " ",
+        Functions.nodeToGridNode(
+          Node("A")),
+        Functions.nodeToGridNode(
+          Node("B")))
     assert(
       result ==
         Grid(
@@ -663,35 +657,81 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii a Single Node") {
     val result: String = Functions.grascii(
-      Grid(
-        Functions.nodeToGridNode(
-          Node("A"))
-          .occupiedCells))
+      Functions.nodeToGridNode(
+        Node("A")))
     println(result)
-    assert(result == "+---+\n| A |\n+---+")
+    assert(result == "AAAAA\nAAAAA\nAAAAA")
   }
 
-  test("Grascii Two Nodes") {
+  test("Grascii Two Nodes Solid Content") {
+    val result: String =
+      Functions.grascii(
+        Functions.mergeGridsNoOverlap(
+          emptyContent = " ",
+          Functions.nodeToGridNode(Node("A")),
+          Functions.nodeToGridNode(Node("B"))))
+    println(result)
+    assert(result == "BBBBB\nBBBBB\nBBBBB\nAAAAA\nAAAAA\nAAAAA")
+  }
+
+  test("Grascii Two Nodes Pretty") {
+    val result: String =
+      Functions.grascii(
+        Functions.mergeGridsNoOverlap(
+          emptyContent = " ",
+          Grid(Functions.nodeToGridNodeHumanPretty(Node("B")).occupiedCells),
+          Grid(Functions.nodeToGridNodeHumanPretty(Node("A")).occupiedCells)))
+    println(result)
+    assert(result == "+---+\n| A |\n+---+\n+---+\n| B |\n+---+")
+  }
+
+  test("Find Path Between Two Nodes") {
     val result: String =
       Functions.grascii(
         Functions.makeRectangleGrid(
-          " ",
-          Functions.mergeGridsNoOverlap(
-            " ",
-            Grid(
-              Functions.nodeToGridNode(
-                Node("A"))
-                .occupiedCells
-                // Setting all the cell contents to "A" so it is easier to identify
-                .map(cell => Cell(cell.coordinate, "A"))),
-            Grid(
-              Functions.nodeToGridNode(
-                Node("B"))
-                .occupiedCells
-                // Setting all the cell contents to "B" so it is easier to identify
-                .map(cell => Cell(cell.coordinate, "B"))))))
+          emptyContent = " ",
+          Functions.gridMapToGrid(
+            Functions.findPath(
+              fillContent = "E",
+              currentCoordinate = Coordinate(6, 4),
+              targetCoordinate = Coordinate(6, 1),
+              Functions.gridToGridMap(
+                Functions.mergeGridsNoOverlap(
+                  emptyContent = " ",
+                  Functions.nodeToGridNode(Node("B")),
+                  Functions.nodeToGridNode(Node("A"))))))))
     println(result)
-    assert(result == "BBBBB\nBBBBB\nBBBBB\nAAAAA\nAAAAA\nAAAAA")
+  }
+
+  test("Artificially Pretty Path Finding") {
+    val gridBeforeEdge: Grid[String] = Functions.makeRectangleGrid(
+      " ",
+      Grid(
+        Set(
+          Functions.nodeToGridNode(Node("A")),
+          Functions.nodeToGridNode(Node("B"))
+        ).reduce((x, y) => Functions.mergeGridsNoOverlap(" ", x, y)).cells ++
+          Set(
+            Cell(Coordinate(5, 2), "X"),
+            Cell(Coordinate(5, 3), "X"),
+            Cell(Coordinate(5, 5), "X"))))
+    println(Functions.grascii(gridBeforeEdge))
+    val result: Grid[String] = Functions.gridMapToGrid(
+      Functions.findPath(
+        fillContent = "0",
+        currentCoordinate = Coordinate(5, 4),
+        targetCoordinate = Coordinate(5, 1),
+        Functions.gridToGridMap(gridBeforeEdge)))
+    println()
+    println(Functions.grascii(result))
+    println()
+    println(Functions.grascii(
+      Functions.makeRectangleGrid(
+        " ",
+        Grid(
+          result
+            .cells
+            .filter(_.content != "X")))))
   }
 
 }
@@ -699,23 +739,10 @@ class FunctionPlaygroundTest extends FunSuite {
 object Functions {
 
   def graphToGrid(graph: Graph): Grid[String] = {
-    // Ensure nodes "breathe"
-    // Ensure nodes have sufficient availableCellsForEdgeConnections
-    // Placement on Grid? That's fluid, right? Figure out the data that represents that decision
-    //
-    // Doesn't matter yet, because the grid will expand as-needed while edges are being drawn,
-    // so, fuck it? Pack it tight?
-    // Vertical stacks on stacks on stacks
-    //    graph.nodes.map()
-    //    Grid(
-    //      graph.nodes.map(nodeToGridNode),
-    //      0, 0)
-    Grid(
-      graph
-        .nodes
-        .map(nodeToGridNode)
-        .flatMap(_.occupiedCells)
-        .toSet)
+    graph
+      .nodes
+      .map(nodeToGridNode)
+      .reduce((gridA, gridB) => mergeGridsNoOverlap(emptyContent = " ", gridA, gridB))
   }
 
   def gridToGridMap[A](grid: Grid[A]): GridMap[A] = {
@@ -797,9 +824,17 @@ object Functions {
       .mkString("\n")
   }
 
+  def nodeToGridNode(node: Node): Grid[String] = {
+    Grid(
+      Range(0, 5)
+        .flatMap(x => Range(0, 3)
+          .map(y => Cell(Coordinate(x, y), node.name)))
+        .toSet)
+  }
+
   // Oof: concrete type commitment
   // What would the "borders" look like if we weren't dealing with String?
-  def nodeToGridNode(node: Node): GridNode[String] = {
+  def nodeToGridNodeHumanPretty(node: Node): GridNode[String] = {
     val border: Border[String] = Border(
       corner = "+",
       horizontal = "-",
@@ -827,7 +862,8 @@ object Functions {
         Cell(Coordinate(4, 1), border.vertical)))
   }
 
-  def distanceBetweenCoordinates(coord1: Coordinate, coord2: Coordinate): Int = {
+  def distanceBetweenCoordinates(coord1: Coordinate,
+                                 coord2: Coordinate): Int = {
     Math.abs(coord1.x - coord2.x) + Math.abs(coord1.y - coord2.y)
   }
 
@@ -848,23 +884,47 @@ object Functions {
                               gridMap: GridMap[String]): Option[Coordinate] = {
     // when there are more than one "best available coordinate",
     // we should recursively pursue each one in "branched universes"
-    // and see which coordinate truly ends up being "best" in the end
-    neighborCoordinates(currentCoordinate)
-      .map(x => (
-        distanceBetweenCoordinates(targetCoordinate, x),
-        occupiedCell(gridMap.cells.getOrElse(x, Cell(Coordinate(-1, -1), " "))),
-        x))
-      .toList
-      .sortBy(x => x._1)
-      .find(x => !x._2)
-      .map(x => x._3)
+    // and see which coordinate truly ends up being "best" in the end.
+    // Something, something should'a used A*
+    bestAvailableCoordinates(
+      currentCoordinate,
+      targetCoordinate,
+      gridMap
+    ).headOption
+  }
+
+  def bestAvailableCoordinates(currentCoordinate: Coordinate,
+                               targetCoordinate: Coordinate,
+                               gridMap: GridMap[String]): Set[Coordinate] = {
+    val possibleCoordinates =
+      neighborCoordinates(currentCoordinate)
+        .map(x => (
+          distanceBetweenCoordinates(targetCoordinate, x),
+          occupiedCell(gridMap.cells.getOrElse(x, Cell(Coordinate(-1, -1), " "))),
+          x))
+        .filter(!_._2)
+        .groupBy(_._1)
+    if (possibleCoordinates.nonEmpty) {
+      possibleCoordinates.getOrElse(possibleCoordinates.keys.min, Set())
+        .map(_._3)
+    } else {
+      Set()
+    }
   }
 
   @tailrec
   def findPath(fillContent: String,
                currentCoordinate: Coordinate,
                targetCoordinate: Coordinate,
-               gridMap: GridMap[String]): GridMap[String] = {
+               gridMap: GridMap[String],
+               debug: Boolean = false): GridMap[String] = {
+    // if this properly backed out of a dead end, then our troubles would be over dude.
+    if (debug) {
+      // Oh RT, I have forsaken you!
+      println(s"currentCoordinate: $currentCoordinate")
+      println(s"targetCoordinate: $targetCoordinate")
+      Thread.sleep(1_000)
+    }
     val gridWithCurrent = GridMap(gridMap.cells + (currentCoordinate -> Cell(currentCoordinate, fillContent)))
     if (currentCoordinate == targetCoordinate) {
       gridWithCurrent
@@ -877,7 +937,8 @@ object Functions {
           fillContent,
           best.get,
           targetCoordinate,
-          GridMap(gridWithCurrent.cells + (best.get -> Cell(best.get, fillContent))))
+          GridMap(gridWithCurrent.cells + (best.get -> Cell(best.get, fillContent))),
+          debug)
       }
     }
   }
