@@ -518,7 +518,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii Literally One Cell") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Grid(
           Set(
             Cell(Coordinate(0, 0), " "))))
@@ -528,7 +528,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii 2 * 2") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Grid(
           Set(
             Cell(Coordinate(0, 0), "1"),
@@ -541,7 +541,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii 3 * 3 Cool X") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Grid(
           Set(
             Cell(Coordinate(0, 0), 1),
@@ -559,7 +559,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii 3 * 3 Cool L") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Grid(
           Set(
             Cell(Coordinate(0, 0), 1),
@@ -577,7 +577,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii 3 * 3 Cool H") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Grid(
           Set(
             Cell(Coordinate(0, 0), 1),
@@ -595,7 +595,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii 3 * 3 Cool I") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Grid(
           Set(
             Cell(Coordinate(0, 0), 1),
@@ -662,7 +662,7 @@ class FunctionPlaygroundTest extends FunSuite {
   }
 
   test("Grascii a Single Node") {
-    val result: String = Functions.dumpGrascii(
+    val result: String = Functions.grascii(
       Grid(
         Functions.nodeToGridNode(
           Node("A"))
@@ -673,7 +673,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii Two Nodes") {
     val result: String =
-      Functions.dumpGrascii(
+      Functions.grascii(
         Functions.makeRectangleGrid(
           " ",
           Functions.mergeGridsNoOverlap(
@@ -782,7 +782,7 @@ object Functions {
           .toSet))
   }
 
-  def dumpGrascii[A](grid: Grid[A]): String = {
+  def grascii[A](grid: Grid[A]): String = {
     grid
       .cells
       .groupBy(_.coordinate.y)
