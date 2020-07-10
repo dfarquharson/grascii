@@ -615,9 +615,9 @@ class FunctionPlaygroundTest extends FunSuite {
     val result: Grid[String] =
       Functions.mergeGridsNoOverlap(
         emptyContent = " ",
-        Functions.nodeToGridNode(
+        Functions.nodeToGrid(
           Node("A")),
-        Functions.nodeToGridNode(
+        Functions.nodeToGrid(
           Node("B")))
     assert(
       result ==
@@ -657,7 +657,7 @@ class FunctionPlaygroundTest extends FunSuite {
 
   test("Grascii a Single Node") {
     val result: String = Functions.grascii(
-      Functions.nodeToGridNode(
+      Functions.nodeToGrid(
         Node("A")))
     println(result)
     assert(result == "AAAAA\nAAAAA\nAAAAA")
@@ -668,8 +668,8 @@ class FunctionPlaygroundTest extends FunSuite {
       Functions.grascii(
         Functions.mergeGridsNoOverlap(
           emptyContent = " ",
-          Functions.nodeToGridNode(Node("A")),
-          Functions.nodeToGridNode(Node("B"))))
+          Functions.nodeToGrid(Node("A")),
+          Functions.nodeToGrid(Node("B"))))
     println(result)
     assert(result == "BBBBB\nBBBBB\nBBBBB\nAAAAA\nAAAAA\nAAAAA")
   }
@@ -698,8 +698,8 @@ class FunctionPlaygroundTest extends FunSuite {
               Functions.gridToGridMap(
                 Functions.mergeGridsNoOverlap(
                   emptyContent = " ",
-                  Functions.nodeToGridNode(Node("B")),
-                  Functions.nodeToGridNode(Node("A"))))))))
+                  Functions.nodeToGrid(Node("B")),
+                  Functions.nodeToGrid(Node("A"))))))))
     println(result)
   }
 
@@ -708,8 +708,8 @@ class FunctionPlaygroundTest extends FunSuite {
       " ",
       Grid(
         Set(
-          Functions.nodeToGridNode(Node("A")),
-          Functions.nodeToGridNode(Node("B"))
+          Functions.nodeToGrid(Node("A")),
+          Functions.nodeToGrid(Node("B"))
         ).reduce((x, y) => Functions.mergeGridsNoOverlap(" ", x, y)).cells ++
           Set(
             Cell(Coordinate(5, 2), "X"),
@@ -741,7 +741,7 @@ object Functions {
   def graphToGrid(graph: Graph): Grid[String] = {
     graph
       .nodes
-      .map(nodeToGridNode)
+      .map(nodeToGrid)
       .reduce((gridA, gridB) => mergeGridsNoOverlap(emptyContent = " ", gridA, gridB))
   }
 
@@ -824,7 +824,7 @@ object Functions {
       .mkString("\n")
   }
 
-  def nodeToGridNode(node: Node): Grid[String] = {
+  def nodeToGrid(node: Node): Grid[String] = {
     Grid(
       Range(0, 5)
         .flatMap(x => Range(0, 3)
