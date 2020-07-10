@@ -1,6 +1,16 @@
 # Grascii
 Make Ascii-Art Graphs out of a Simple Graph Format (.grascii)
 
+## WARNING
+**THIS IS A WORK IN PROGRESS**
+
+### More Warning
+This is more of a lab for experimenting with Scala than it is a "serious project".
+If/when something actually useful falls out, that'll be cool.
+Until then, this is a fruitful place to experiment with Scala
+while trying to do something "real", but placing more emphasis on the "experiment"
+than the "real", if that makes sense. Enter at your own risk! 
+
 ## Examples
 
 ### Simple Input
@@ -119,17 +129,16 @@ A=5=>D
 - [ ] write alternative implementation in python (toolz, hypothesis, pytest, pytest-cov)
 
 ## Actual TODO
-- [ ] place nodes on the grid (non-overlapping)
+- [x] place nodes on the grid (non-overlapping)
 - [ ] draw actual graphs on the grid
 - [x] dump out the ascii art
 
 ## Libraries
 |Library|Purpose|GitHub|Docs|
 |-------|-------|------|----|
+|cats|[abstract nonsense](https://en.wikipedia.org/wiki/Abstract_nonsense)|https://github.com/typelevel/cats|https://typelevel.org/cats/|
+|scala test|testing/empiricism/feedback|https://github.com/scalatest/scalatest|https://www.scalatest.org/|
 |circe|json serialization|https://github.com/circe/circe|https://circe.github.io/circe/|
-
-## Notes
-- From the perspective of mechanical sympathy, this implementation is, to use the scientific term: "shit".
 
 ## The Story
 I like ascii art. I like graphs. Why not make nice little visual representations of graphs with ascii art?
