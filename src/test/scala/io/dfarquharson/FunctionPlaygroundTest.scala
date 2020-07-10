@@ -341,6 +341,7 @@ class FunctionPlaygroundTest extends FunSuite {
           targetCoordinate = Coordinate(2, 2),
           gridMap = Functions.gridToGridMap(Grid(Set()))))
     println(result)
+    println(Functions.grascii(Functions.makeRectangleGrid(" ", result)))
     assert(
       result ==
         Grid(
@@ -364,6 +365,7 @@ class FunctionPlaygroundTest extends FunSuite {
               Set(
                 Cell(Coordinate(1, 2), "O"))))))
     println(result)
+    println(Functions.grascii(Functions.makeRectangleGrid(" ", result)))
     // This illustrates the failure of taking "first best available coordinate"
     // without working that out over a longer distance and seeing what is truly "best" in the long run.
     assert(
@@ -395,6 +397,7 @@ class FunctionPlaygroundTest extends FunSuite {
                 Cell(Coordinate(1, 0), "O"),
                 Cell(Coordinate(2, 0), "O"))))))
     println(result)
+    println(Functions.grascii(Functions.makeRectangleGrid(" ", result)))
     assert(
       result ==
         Grid(
