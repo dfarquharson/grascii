@@ -682,11 +682,13 @@ class FunctionPlaygroundTest extends FunSuite {
               Functions.nodeToGridNode(
                 Node("A"))
                 .occupiedCells
+                // Setting all the cell contents to "A" so it is easier to identify
                 .map(cell => Cell(cell.coordinate, "A"))),
             Grid(
               Functions.nodeToGridNode(
                 Node("B"))
                 .occupiedCells
+                // Setting all the cell contents to "B" so it is easier to identify
                 .map(cell => Cell(cell.coordinate, "B"))))))
     println(result)
     assert(result == "BBBBB\nBBBBB\nBBBBB\nAAAAA\nAAAAA\nAAAAA")
@@ -695,11 +697,6 @@ class FunctionPlaygroundTest extends FunSuite {
 }
 
 object Functions {
-  val border: Border[String] = Border(
-    corner = "+",
-    horizontal = "-",
-    vertical = "|",
-    empty = " ")
 
   def graphToGrid(graph: Graph): Grid[String] = {
     // Ensure nodes "breathe"
@@ -714,7 +711,8 @@ object Functions {
     //      graph.nodes.map(nodeToGridNode),
     //      0, 0)
     Grid(
-      graph.nodes
+      graph
+        .nodes
         .map(nodeToGridNode)
         .flatMap(_.occupiedCells)
         .toSet)
@@ -802,6 +800,11 @@ object Functions {
   // Oof: concrete type commitment
   // What would the "borders" look like if we weren't dealing with String?
   def nodeToGridNode(node: Node): GridNode[String] = {
+    val border: Border[String] = Border(
+      corner = "+",
+      horizontal = "-",
+      vertical = "|",
+      empty = " ")
     GridNode(
       Set(
         Cell(Coordinate(0, 0), border.corner),
