@@ -9,7 +9,10 @@ This is more of a lab for experimenting with Scala than it is a "serious project
 If/when something actually useful falls out, that'll be cool.
 Until then, this is a fruitful place to experiment with Scala
 while trying to do something "real", but placing more emphasis on the "experiment"
-than the "real", if that makes sense. Enter at your own risk! 
+than the "real", if that makes sense. Enter at your own risk!
+
+## The Interesting Parts
+- Most of the juicy experiments live here: https://github.com/dfarquharson/grascii/blob/stable/src/test/scala/io/dfarquharson/FunctionPlaygroundTest.scala
 
 ## Examples
 
