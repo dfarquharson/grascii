@@ -4,8 +4,9 @@ import atto._
 import Atto._
 import cats.implicits._
 import atto.ParseResult.Done
-import org.scalatest.FunSuite
+import org.scalatest.{FunSuite, Ignore}
 
+@Ignore
 class AttoPlayground extends FunSuite {
   // Reference: https://tpolecat.github.io/atto/docs/first-steps.html
 

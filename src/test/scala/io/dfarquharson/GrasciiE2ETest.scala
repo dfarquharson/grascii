@@ -1,7 +1,8 @@
 package io.dfarquharson
 
-import org.scalatest.FunSuite
+import org.scalatest.{FunSuite, Ignore}
 
+@Ignore
 class GrasciiE2ETest extends FunSuite {
 
   test("E2E Example 1") {
