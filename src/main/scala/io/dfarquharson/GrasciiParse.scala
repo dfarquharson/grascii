@@ -32,10 +32,10 @@ object GrasciiParse extends GrasciiParse {
     val pattern = "(.*)=(.*)=>(.*)".r
     val pattern(nodeA, edge, nodeB) = s
     Graph(
-      List(
+      Set(
         Node(nodeA),
         Node(nodeB)),
-      List(
+      Set(
         Edge(
           Node(nodeA),
           Node(nodeB),
@@ -45,17 +45,17 @@ object GrasciiParse extends GrasciiParse {
 
 object GraphMonoid {
   implicit def graphMonoid: Monoid[Graph] = new Monoid[Graph] {
-    def empty: Graph = Graph(List(), List())
+    def empty: Graph = Graph(Set(), Set())
 
     def combine(g1: Graph, g2: Graph): Graph =
       Graph(
-        (g1.nodes ++ g2.nodes).distinct,
-        (g1.edges ++ g2.edges).distinct)
+        (g1.nodes ++ g2.nodes),
+        (g1.edges ++ g2.edges))
   }
 }
 
-case class Graph(nodes: List[Node],
-                 edges: List[Edge])
+case class Graph(nodes: Set[Node],
+                 edges: Set[Edge]) extends TGraph[Node, Edge]
 
 case class Node(name: String)
 

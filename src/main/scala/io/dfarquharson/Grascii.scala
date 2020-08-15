@@ -24,7 +24,7 @@ object GrasciiHelpers {
       .map(_.toList)
 
   def increaseGridSizeForEdges(graph: Graph, grid: List[List[Char]], spacePerEdge: Int = 3): List[List[Char]] =
-    grid.map(_ ++ (" " * graph.edges.length * spacePerEdge).toList)
+    grid.map(_ ++ (" " * graph.edges.size * spacePerEdge).toList)
 
   def growNodesOnGridToFitEdges(graph: Graph, grid: List[List[Char]]): List[List[Char]] =
     List()

@@ -9,16 +9,16 @@ class GrasciiParseTest extends FunSuite {
   test("Combine Graphs") {
     assert(List(
       Graph(
-        List(Node("A"), Node("B")),
-        List(Edge(Node("A"), Node("B"), "X"))
+        Set(Node("A"), Node("B")),
+        Set(Edge(Node("A"), Node("B"), "X"))
       ),
       Graph(
-        List(Node("A"), Node("C")),
-        List(Edge(Node("A"), Node("C"), "Y"))
+        Set(Node("A"), Node("C")),
+        Set(Edge(Node("A"), Node("C"), "Y"))
       )
     ).combineAll == Graph(
-      List(Node("A"), Node("B"), Node("C")),
-      List(
+      Set(Node("A"), Node("B"), Node("C")),
+      Set(
         Edge(Node("A"), Node("B"), "X"),
         Edge(Node("A"), Node("C"), "Y"))
     ))
@@ -26,37 +26,37 @@ class GrasciiParseTest extends FunSuite {
 
   test("Combine Graph with Empty") {
     assert(List(
-      Graph(List(), List()),
+      Graph(Set(), Set()),
       Graph(
-        List(Node("A")),
-        List(Edge(Node("A"), Node("A"), "B")))
+        Set(Node("A")),
+        Set(Edge(Node("A"), Node("A"), "B")))
     ).combineAll ==
       Graph(
-        List(Node("A")),
-        List(Edge(Node("A"), Node("A"), "B"))))
+        Set(Node("A")),
+        Set(Edge(Node("A"), Node("A"), "B"))))
   }
 
   test("Combine Empty Graphs") {
     assert(List(
-      Graph(List(), List()),
-      Graph(List(), List())
+      Graph(Set(), Set()),
+      Graph(Set(), Set())
     ).combineAll ==
-      Graph(List(), List()))
+      Graph(Set(), Set()))
   }
 
   test("Monoidal Combination") {
     assert(List(
-      Graph(List(Node("A")), List()),
-      Graph(List(Node("B")), List())
+      Graph(Set(Node("A")), Set()),
+      Graph(Set(Node("B")), Set())
     ).combineAll ==
-      Graph(List(Node("A"), Node("B")), List()))
+      Graph(Set(Node("A"), Node("B")), Set()))
   }
 
   test("One thing pointing to another") {
     assert(GrasciiParse.parse(List("A=B=>C")) ==
       Graph(
-        List(Node("A"), Node("C")),
-        List(Edge(Node("A"), Node("C"), "B"))
+        Set(Node("A"), Node("C")),
+        Set(Edge(Node("A"), Node("C"), "B"))
       ))
   }
 
@@ -68,12 +68,12 @@ class GrasciiParseTest extends FunSuite {
         "C=D=>A"
       )) ==
       Graph(
-        List(
+        Set(
           Node("A"),
           Node("B"),
           Node("C")
         ),
-        List(
+        Set(
           Edge(Node("A"), Node("B"), "HTTP"),
           Edge(Node("B"), Node("C"), "GRPC"),
           Edge(Node("C"), Node("A"), "D")
